@@ -1,12 +1,12 @@
 Node package for firebase chat application.
 
-##Import Statement
-``js
+Import Statement
+``
 const FirebaseChat  = require('firebase-chat-plugin').FirebaseChat;
 ``
 
-##Initialize your app
-``js
+Initialize your app
+``
 const config = {
   apiKey: "xxxxxx",
   authDomain: "xxxxxxx.firebaseapp.com",
@@ -17,7 +17,7 @@ const config = {
 };
 ``
 You have to get this config from firebase developer console by creating new project.
-``js
+``
 var app = new FirebaseChat(config)
 ``
 ##Initialize chat
