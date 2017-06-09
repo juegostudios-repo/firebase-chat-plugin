@@ -20,7 +20,7 @@ const config = {
 };
 ``
 
-## You have to get this config from firebase developer console by creating new project.
+You have to get this config from firebase developer console by creating new project.
 
 ``
 var app = new FirebaseChat(config)
