@@ -5,6 +5,8 @@
 
 ```
 const FirebaseChat  = require('firebase-chat-plugin').FirebaseChat;
+or
+import {FirebaseChat}  from 'firebase-chat-plugin';
 ```
 
 
@@ -33,4 +35,11 @@ app.initChat(userID, displayName, displayPic)
   console.log(res);// return user object
 })
 .catch(err=> console.log(err));
+```
+
+### Send message
+```
+app.sendMessage(otherUserId, message, messageType /* optional */, fileKey /* optional */)
+.then(res=>console.log(res))
+.catch(err=>console.log(err))
 ```
