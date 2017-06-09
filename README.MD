@@ -1,11 +1,14 @@
-Node package for firebase chat application.
+## Node package for firebase chat application.
 
-Import Statement
+
+## Import Statement
+
 ``
 const FirebaseChat  = require('firebase-chat-plugin').FirebaseChat;
 ``
 
-Initialize your app
+
+## Initialize your app
 ``
 const config = {
   apiKey: "xxxxxx",
@@ -16,11 +19,14 @@ const config = {
   messagingSenderId: "499915985318"
 };
 ``
-You have to get this config from firebase developer console by creating new project.
+
+## You have to get this config from firebase developer console by creating new project.
+
 ``
 var app = new FirebaseChat(config)
 ``
-##Initialize chat
+
+## Initialize chat
 ``js
 app.initChat(userID, displayName, displayPic)
 .then(res=>{
