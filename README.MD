@@ -1,14 +1,14 @@
 ## Node package for firebase chat application.
 
 
-## Import Statement
+### Import Statement
 
 ``
 const FirebaseChat  = require('firebase-chat-plugin').FirebaseChat;
 ``
 
 
-## Initialize your app
+### Initialize your app
 ``
 const config = {
   apiKey: "xxxxxx",
@@ -26,7 +26,7 @@ You have to get this config from firebase developer console by creating new proj
 var app = new FirebaseChat(config)
 ``
 
-## Initialize chat
+### Initialize chat
 ``
 app.initChat(userID, displayName, displayPic)
 .then(res=>{
