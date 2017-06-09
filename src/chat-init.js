@@ -1,5 +1,10 @@
 function initChat (userId, displayName, displayPhoto)
 {
+    var offsetRef = this.db.ref(".info/serverTimeOffset");
+    offsetRef.once("value", (snap)=> {
+      this.serverTimeOffset = snap.val();
+    });
+
   const userRef = this.db.ref('users/');
   return new Promise((resolve, reject)=>{
     userRef.orderByChild('uid').equalTo(userId).limitToLast(1).once('value')
