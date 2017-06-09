@@ -27,7 +27,7 @@ var app = new FirebaseChat(config)
 ``
 
 ## Initialize chat
-``js
+``
 app.initChat(userID, displayName, displayPic)
 .then(res=>{
   console.log(res);// return user object
