@@ -1,0 +1,19 @@
+{
+  "name": "firebase-chat-plugin",
+  "version": "1.0.0",
+  "description": "Firebase chat plugin for angular",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "firebase",
+    "chat",
+    "angular2"
+  ],
+  "author": "Juego Studio Pvt Ltd <repo@juegostudio.com> (https://www.juegostudio.com/)",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^3.9.0"
+  }
+}
