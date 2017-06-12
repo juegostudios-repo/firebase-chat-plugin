@@ -48,3 +48,20 @@ app.sendMessage(otherUserId, message, messageType /* optional */, fileKey /* opt
 ```
 app.receiveMessage(otherUserId).subscribe(message => console.log(message));
 ```
+
+### Listing Recent Chats 
+```
+app.getRecentChatList().then(channelList => console.log(channelList)).catch(err=> console.log(err));
+```
+
+### Typing Indicator 
+To set Typing status the user has to send typing status (true , false) and userId of the Other user 
+```
+app.setIsTypingStatus(otherUserId, typingStatus)
+.then(successMsg => console.log(successMsg))
+.catch(err=> console.log(err));
+```
+To get Typing status the user has to send userId of the Other user 
+```
+app.getIsTypingStatus(OtherUserId).subscribe(TypingStatus => {console.log(TypingStatus);})
+```
