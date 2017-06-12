@@ -2,24 +2,30 @@
 function getRecentChatList() 
 {
   console.log("get-Recent-Chat-List");
-  var userChannels = this.user.channelList;
-  var channels = Object.keys(userChannels).map(key=> userChannels[key]);
-  var allChannelList;
-  var channelList = [];
   return new Promise((resolve, reject) =>{
-    getAllChannelLists(this).then(res => {
-      allChannelList = res;
-      allChannelList.forEach(channel => {
-        channels.forEach(userChannel => {
-          if( userChannel.channelId === channel.key) {
-            delete channel.value.messages;
-            channelList.push(channel.value);
-          }
+    var userChannels = this.user.channelList;
+    if(userChannels)
+    {
+      var channels = Object.keys(userChannels).map(key=> userChannels[key]);
+      var allChannelList;
+      var channelList = [];
+      getAllChannelLists(this).then(res => {
+        allChannelList = res;
+        allChannelList.forEach(channel => {
+          channels.forEach(userChannel => {
+            if( userChannel.channelId === channel.key) {
+              delete channel.value.messages;
+              channelList.push(channel.value);
+            }
+          });
         });
-      });
-      resolve(channelList);
-    })
-    
+        resolve(channelList);
+      })
+    }
+    else
+    {
+      reject({ success: false, errorMessage: "No Channels exists"});
+    }
   });
 }
 
@@ -36,7 +42,7 @@ function getAllChannelLists(self)
         resolve(result);
       }
       else 
-        reject("no Channels");
+        reject({ success: false, errorMessage: "No Channels exists"});
     });
   }); 
 }
