@@ -1,5 +1,6 @@
 ## Node package for firebase chat application.
 
+## This package is Under Development. Not Ready for use.  
 
 ### Import Statement
 
