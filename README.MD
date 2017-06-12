@@ -37,9 +37,14 @@ app.initChat(userID, displayName, displayPic)
 .catch(err=> console.log(err));
 ```
 
-### Send message
+### Sending message
 ```
 app.sendMessage(otherUserId, message, messageType /* optional */, fileKey /* optional */)
 .then(res=>console.log(res))
 .catch(err=>console.log(err))
+```
+
+### Receiving Message
+```
+app.receiveMessage(otherUserId).subscribe(message => console.log(message));
 ```
