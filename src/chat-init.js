@@ -1,9 +1,9 @@
 function initChat (userId, displayName, displayPhoto)
 {
-    var offsetRef = this.db.ref(".info/serverTimeOffset");
-    offsetRef.once("value", (snap)=> {
-      this.serverTimeOffset = snap.val();
-    });
+  var offsetRef = this.db.ref(".info/serverTimeOffset");
+  offsetRef.once("value", (snap)=> {
+    this.serverTimeOffset = snap.val();
+  });
 
   const userRef = this.db.ref('users/');
   return new Promise((resolve, reject)=>{
@@ -12,7 +12,8 @@ function initChat (userId, displayName, displayPhoto)
       if(snapshot.val()){
         snapshot.forEach((childSnapshot) => {
           this.user = childSnapshot.val();
-          this.user.$key = childSnapshot.getKey(); 
+          this.user.$key = childSnapshot.getKey();
+          listenToChannelListUpdate(this) 
           resolve(this.user);
         });
       } else{
@@ -25,12 +26,22 @@ function initChat (userId, displayName, displayPhoto)
         .then((pushResponse) => {
           user.$key = pushResponse.key;
           this.user = user;
+          listenToChannelListUpdate(this);
           resolve(user);
         })
         .catch(err=> reject(err));
       }
     })
     .catch(err=> reject(err));
+  });
+}
+
+function listenToChannelListUpdate(self)
+{
+  self.db.ref('/users/'+self.user.$key + '/channelList')
+  .on("value", (snap)=> {
+    console.log("Channel list updated");
+    self.user.channelList = snap.val();
   });
 }
 
