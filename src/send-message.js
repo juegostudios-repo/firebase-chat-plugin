@@ -1,6 +1,7 @@
 const firebase = require('firebase');
 
 var getChannelIdForUser = require('./get-channelid');
+var createNewChannel = require('./create-channel');
 
 function sendMessage(otherUserId, message, messageType, fileKey)
 {
@@ -38,6 +39,11 @@ function sendMessage(otherUserId, message, messageType, fileKey)
     } else{
       console.log("Channel Does not exist");
       // Creating channel if channel does not exist;
+      createNewChannel(this,this.user.uid, otherUserId)
+      .then(res=>this.sendMessage(otherUserId, message, messageType, fileKey)
+        .then(res=>resolve(res)).catch(err => reject(err))
+      )
+      .catch(err=> reject(err));
       
     }
   });
