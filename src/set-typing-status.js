@@ -29,11 +29,11 @@ function setIsTypingStatus(otherUserId, typingStatus)
             }
           });
       });
-      resolve("Typing status assigned succesfully");
+      resolve({ success: true, successMessage: "Typing status assigned succesfully"});
     }
     else 
     {
-      reject("there is no channel established");
+      reject({ success: false, errorMessage: "There is no channel established"});
     }
   });
 }
