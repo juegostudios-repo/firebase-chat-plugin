@@ -17,24 +17,3 @@ function receiveMessage(otherUserId)
 }
 
 module.exports = receiveMessage;
-
-  // receiveMessage(otherUserId) 
-  // {
-  //   return new Observable((observer) => {
-  //     this.getChatList().then(res => {
-  //       var channelId = this.getChannelIdForUser(otherUserId, res);
-  //       if(!channelId){ 
-  //         observer.error({ success: false, errorMessage:" There is no channel " }) 
-  //       }
-  //       else{
-  //         var order = 'negativetimestamp';
-  //         this.db.list('/channel/' + channelId + '/messages', {
-  //           query: {
-  //             orderByChild: order,
-  //             limitToFirst: 1
-  //           }
-  //         }).subscribe(res => observer.next(res))
-  //       }
-  //     });
-  //   })
-  // }

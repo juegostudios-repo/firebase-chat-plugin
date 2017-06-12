@@ -38,11 +38,11 @@ function initChat (userId, displayName, displayPhoto)
 
 function listenToChannelListUpdate(self)
 {
-  self.db.ref('/users/'+self.user.$key + '/channelList')
+  self.db.ref('/users/'+ self.user.$key + '/channelList')
   .on("value", (snap)=> {
-    console.log("Channel list updated");
     self.user.channelList = snap.val();
   });
+  setInterval(()=>{self.setOnlineStatus()}, 10000);
 }
 
 module.exports = initChat;
