@@ -12,7 +12,8 @@ function setOnlineStatus()
   if(channels.constructor !== Array){
     channels = Object.keys(channels).map(key=> channels[key]);
   }
-
+  if(channels.length < 1) return;
+  
   channels.forEach((channel)=>{
     var members = channel.members;
     members.forEach((member, i) => {
@@ -21,7 +22,7 @@ function setOnlineStatus()
       }
     });
     lastSeenAt = firebase.database.ServerValue.TIMESTAMP;
-    
+
     this.db.ref('/channel/' + channel.channelId + '/members/'+ index +'/lastSeenAt').set(lastSeenAt);
   });
 }
