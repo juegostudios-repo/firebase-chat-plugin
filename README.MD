@@ -18,7 +18,7 @@ const config = {
   databaseURL: "https://xxxxxxx.firebaseio.com",
   projectId: "xxxxxxx",
   storageBucket: "xxxxxxx.appspot.com",
-  messagingSenderId: "499915985318"
+  messagingSenderId: "XXXXXXXXXXX"
 };
 ```
 
