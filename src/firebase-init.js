@@ -6,16 +6,20 @@ const setIsTypingStatus = require('./set-typing-status');
 const getIsTypingStatus = require('./get-typing-status');
 const getRecentChatList = require('./recent-chat-list');
 const onlineStatus = require('./online-status').onlineStatus;
+const sendImage = require('./send-image');
+const getFile = require('./get-file');
 const loadPrevMsgs = require('./load-previous-msgs');
 
 function FirebaseChat(config) {
-    
     this.app = firebase.initializeApp(config);
     this.db = this.app.database();
     this.initChat = initChat;
     this.sendMessage = sendMessage;
     this.receiveMessage = receiveMessage;
-    
+
+    this.sendImage = sendImage;
+    this.getFile = getFile;
+
     this.setIsTypingStatus = setIsTypingStatus;
     this.getIsTypingStatus = getIsTypingStatus;
     

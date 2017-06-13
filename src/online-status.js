@@ -8,11 +8,10 @@ function setOnlineStatus()
   var channels = this.user.channelList;
   var index = 0;
   var lastSeenAt;
-
+  if(channels.length < 1) return;
   if(channels.constructor !== Array){
     channels = Object.keys(channels).map(key=> channels[key]);
   }
-  if(channels.length < 1) return;
   
   channels.forEach((channel)=>{
     var members = channel.members;
