@@ -7,13 +7,15 @@ function loadPrevMsgs(channelId, msgLimit, fromStart)
   {
     var result = [];
     return new Promise((resolve, reject) => {
-      this.db.ref('/channel/' + channelId + '/messages').orderByChild('timestamp')
+      this.db.ref('/channel/' + channelId + '/messages').orderByChild('negativetimestamp')
+      .limitToFirst(100)
       .once('value').then(snapshot => {
         snapshot.forEach(childsnapshot => {
           result.push(childsnapshot.val());
         });
+        result = result.reverse();
         resolve(result);
-      })
+      }).catch(err => reject(err));
     });
   }
   else 
@@ -39,6 +41,7 @@ function loadPrevMsgs(channelId, msgLimit, fromStart)
           result = result.reverse();
           resolve(result);
         })
+        .catch(err => reject(err));
       }
       else 
       {
@@ -61,6 +64,7 @@ function loadPrevMsgs(channelId, msgLimit, fromStart)
           result = result.reverse();
           resolve(result);
         })
+        .catch(err => reject(err));
       }
     });
   }
