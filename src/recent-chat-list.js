@@ -15,7 +15,12 @@ function getRecentChatList()
           channels.forEach(userChannel => {
             if( userChannel.channelId === channel.key) {
               delete channel.value.messages;
-              channelList.push({channelID: channel.key ,value: channel.value});
+              channelList.push({channelID: channel.key,
+                createdAt: channel.value.createdAt, 
+                lastActivity: channel.value.lastActivity,
+                lastMessage: channel.value.lastMessage,
+                members: channel.value.members
+              });
             }
           });
         });
