@@ -47,6 +47,19 @@ app.sendMessage(otherUserId, message, messageType /* optional */, fileKey /* opt
 ```
 
 
+### Sending Image
+```
+app.sendImage(imageUrl, otherUserId, type).then(res=>console.log(res), err => console.log(err));
+```
+
+
+### Get file using fileKey
+``sendImage()`` method uploads compressed image, returns fileKey. To get actual image use fileKey with ``getFile()`` method.
+```
+app.getFile(fileKey).then(res=>{console.log(res)})
+```
+
+
 ### Receiving Message
 ```
 app.receiveMessage(otherUserId).subscribe(message => console.log(message));
@@ -76,6 +89,7 @@ app.getIsTypingStatus(OtherUserId).subscribe(TypingStatus => {console.log(Typing
 ```
 app.getOnlineStatus(otherUserId).subscribe(onlineStatus=>console.log(onlineStatus));
 ```
+
 
 ### Load Previous Messages
 
