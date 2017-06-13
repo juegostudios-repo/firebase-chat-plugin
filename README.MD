@@ -76,3 +76,14 @@ app.getIsTypingStatus(OtherUserId).subscribe(TypingStatus => {console.log(Typing
 ```
 app.getOnlineStatus(otherUserId).subscribe(onlineStatus=>console.log(onlineStatus));
 ```
+
+### Load Previous Messages
+
+fromStart parameter takes Boolean values
+
+```
+app.loadPrevMsgs(channelId, messageLimit /*optional*/, fromStart /*optional*/)
+  .then( messageList => {
+    console.log( messageList );
+  });
+```
