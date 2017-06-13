@@ -29,7 +29,7 @@ function sendMessage(otherUserId, message, messageType, fileKey)
       if(messageType === 'image'){
         messageObj.fileKey =  fileKey;
       }
-      this.db.ref('/channel/' + channelId + '/lastMessage').set(message);
+      this.db.ref('/channel/' + channelId + '/lastMessage').set(messageObj);
       this.db.ref('/channel/' + channelId + '/lastActivity').set(lastActivity);
       this.db.ref('/channel/' + channelId + '/messages/').push(messageObj)
       .then(messageSentResponse=> { 
