@@ -6,6 +6,7 @@ const setIsTypingStatus = require('./set-typing-status');
 const getIsTypingStatus = require('./get-typing-status');
 const getRecentChatList = require('./recent-chat-list');
 const onlineStatus = require('./online-status').onlineStatus;
+const loadPrevMsgs = require('./load-previous-msgs');
 
 function FirebaseChat(config) {
     
@@ -22,6 +23,8 @@ function FirebaseChat(config) {
     this.getOnlineStatus = onlineStatus.getOnlineStatus;
     
     this.getRecentChatList = getRecentChatList;
+
+    this.loadPrevMsgs = loadPrevMsgs;
 
 }
 module.exports = FirebaseChat;
