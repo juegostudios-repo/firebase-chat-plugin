@@ -5,8 +5,6 @@ function createNewChannel(self, myUId, otherUserId)
   return new Promise((resolve, reject) => {
     var user = {
       uid: self.user.uid,
-      displayName: self.user.displayName, 
-      displayPhoto: self.user.displayPhoto,
     }
     var member_one = {
       user: user
@@ -27,13 +25,12 @@ function createNewChannel(self, myUId, otherUserId)
         // Add this newly created channel to both users channel list
         var channelName = "one2one";
         var createdAt = Date.now() + self.serverTimeOffset;
-        console.log(JSON.stringify(members, undefined, 2));
-        addToChannelList(self, members, member_one.key, channelId, channelName, createdAt)
+        addToChannelList(self, myUId, member_one.key, channelId)
         .then((_)=>{
-          return addToChannelList(self, members, member_two.key, channelId, channelName, createdAt)
+          return addToChannelList(self, otherUserId, member_two.key, channelId)
         })
         .then(res=>{ 
-          createChannelCollection(self, members, channelId, createdAt);
+          createChannelCollection(self, members, channelId, createdAt, channelName);
           resolve({status: true, responseMessage: {message: "Channel created", channelId: channelId}});
         })
         .catch(err=> reject(err));
@@ -46,7 +43,7 @@ function getUserDetails(self, userId)
 {
   return new Promise((resolve, reject)=>{
     
-    var usersRef = self.db.ref('/users').orderByChild('uid').equalTo(userId).limitToLast(1);
+    var usersRef = self.db.ref('/users/' +userId).orderByChild('uid').equalTo(userId).limitToLast(1);
     
     usersRef.once('value')
     .then((snapshot) => {         
@@ -54,8 +51,6 @@ function getUserDetails(self, userId)
         snapshot.forEach((childSnapshot) => { 
           var user = {
             uid: childSnapshot.val().uid,
-            displayName: childSnapshot.val().displayName, 
-            displayPhoto: childSnapshot.val().displayPhoto
           }
           resolve({ user: user, key: childSnapshot.getKey() });
         });
@@ -67,25 +62,26 @@ function getUserDetails(self, userId)
   });
 }
 
-function createChannelCollection(self, members, channelId, createdAt)
+function createChannelCollection(self, members, channelId, createdAt, channelName)
 {
-  members[0].lastSeenAt = firebase.database.ServerValue.TIMESTAMP;
-
   var channel = {
+    channelName: channelName,
     members: members,
     createdAt: createdAt
   };
   self.db.ref('/channel/' + channelId).set(channel);
+  var obj = [{
+    channelId: channelId, 
+    members: members
+  }]
+  self.user.channelList = obj;
 }
 
-function addToChannelList(self,members, key, channelId, channelName, createdAt)
+function addToChannelList(self, userId, key, channelId)
 {
-  return self.db.ref('/users/'+ key + '/channelList').push({
-    members: members,
+  return self.db.ref('/users/'+ userId + '/' + key + '/channelList').push({
     channelId: channelId,
-    channelName: channelName,
-    createdAt: createdAt
   });
-}
+} 
 
 module.exports = createNewChannel;

@@ -4,8 +4,19 @@ function getChannelIdForUser(userId, channelList)
   if(!channelList)
     return channelId
   if(channelList.constructor !== Array){
-    channelList = Object.keys(channelList).map(key=> channelList[key]);
+    // var members = channelList.members;
+    // members.forEach(member => {
+    //   if(member.uid === userId && members.length === 2)
+    //   {
+    //     channelId = channelList.channelId;
+    //   }
+    // })
+    // return channelId;
+    channelList = Object.keys(channelList).map(key=> {
+      channelList[key]});
+      
   }
+  
   channelList.forEach(channel => {
     channel.members.forEach(member => {
       if(member.uid === userId && channel.members.length === 2)
