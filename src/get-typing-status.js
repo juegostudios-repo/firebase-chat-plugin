@@ -17,10 +17,11 @@ function getIsTypingStatus(otherUserId)
           });
           members.forEach((member) => {
             if(member.uid === otherUserId) {
-              if(member.typingIndicator)
-                var result = { success: true, typingIndicator: member.typingIndicator };
+              if(member.typingIndicator !== undefined )
+                var result = { otherUserId, typingIndicator: member.typingIndicator };
               else
                 var result = { success: false, errorMessage:" There is no typing indicator set" };
+             
               observer.next(result);
             }
           });
