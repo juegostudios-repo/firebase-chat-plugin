@@ -5,20 +5,18 @@ var createNewChannel = require('./create-channel');
 
 function sendMessage(otherUserId, message, messageType, fileKey)
 {
-  console.log("Sending message");
   if(!messageType){
     messageType = 'text';
   }
   return new Promise((resolve, reject)=>{
     var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
     var lastActivity = firebase.database.ServerValue.TIMESTAMP;
-    console.log("ChannelId :: " + channelId);
     if(channelId)
     {
       var time = Date.now() + this.serverTimeOffset;
       var messageObj;
       messageObj = {
-        msgId: firebase.database.ServerValue.TIMESTAMP,
+        msgId: time/*firebase.database.ServerValue.TIMESTAMP*/,
         uid: this.user.uid,
         message: message,
         messageType: messageType,
@@ -28,21 +26,18 @@ function sendMessage(otherUserId, message, messageType, fileKey)
       if(messageType === 'image'){
         messageObj.fileKey =  fileKey;
       }
-      
-      this.db.ref('/channel/' + channelId + '/lastMessage').set(messageObj);
       this.db.ref('/channel/' + channelId + '/lastActivity').set(lastActivity);
+      this.db.ref('/channel/' + channelId + '/lastMessage').set(messageObj);
       this.db.ref('/channel/' + channelId + '/messages/').push(messageObj)
       .then(messageSentResponse=> { 
-        console.log("came here");
         /** pushing channelId to the receiver */
         pushChannelIdToReceiver(otherUserId, channelId, this);
         /** end */
         resolve(messageObj); 
       })
       .catch(errorMessage=> { reject(errorMessage) });
-       
+      
     } else{
-      console.log("Channel Does not exist");
       // Creating channel if channel does not exist;
       createNewChannel(this,this.user.uid, otherUserId)
       .then(res=> {
