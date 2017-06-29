@@ -1,31 +1,47 @@
 
 var getChannelIdForUser = require('./get-channelid');
 
-function setIsTypingStatus(otherUserId, typingStatus) 
+function setIsTypingStatus(otherUserId, htmlTagId) 
 {
   console.log("set Typing status");
-  return new Promise((resolve, reject) => {
-    var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
+ 
+  var tag = document.getElementById(htmlTagId);
+  tag.addEventListener("focusin", () => {
+   
+    updateTypingIndicator(this, true, otherUserId)
+  });
+
+  tag.addEventListener("focusout", () => {
+   
+    updateTypingIndicator(this, false, otherUserId)
+  });
+ 
+}
+
+function updateTypingIndicator(self, typingStatus, otherUserId)
+{
+    return new Promise((resolve, reject) => {
+    var channelId = getChannelIdForUser(otherUserId, self.user.channelList);
     var members;
     var isTyping;
     if(channelId) 
     {
-      this.db.ref('/channel/'+channelId).once('value').then((snapshot)=> {
+      self.db.ref('/channel/'+channelId).once('value').then((snapshot)=> {
           snapshot.forEach((childSnapshot) => {
             if(childSnapshot.getKey() === "members") 
             {
               members = childSnapshot.val();
             }
           });
-          if(members[0].uid === this.user.uid && members[1].uid === otherUserId) {
+          if(members[0].uid === self.user.uid && members[1].uid === otherUserId) {
             isTyping = typingStatus;
           }
-          if(members[0].uid === otherUserId && members[1].uid === this.user.uid) {
+          if(members[0].uid === otherUserId && members[1].uid === self.user.uid) {
             isTyping = typingStatus;
           }
           members.forEach((member, i) => {
-            if(member.uid === this.user.uid) {
-              this.db.ref('/channel/' + channelId + '/members/'+ i +'/typingIndicator').set(isTyping);
+            if(member.uid === self.user.uid) {
+              self.db.ref('/channel/' + channelId + '/members/'+ i +'/typingIndicator').set(isTyping);
             }
           });
       });
@@ -37,5 +53,4 @@ function setIsTypingStatus(otherUserId, typingStatus)
     }
   });
 }
-
 module.exports = setIsTypingStatus;
