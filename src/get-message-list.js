@@ -5,18 +5,18 @@ var createNewChannel = require('./create-channel');
 
 var lastMsgId;
 
-function getMessageList(otherUserId, BeginFrom)
+function getMessageList(otherUserId)
 {
  
   return new Observable((observer) => {
-
+    var beginFrom = true;
     var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
 
     if(!channelId){ 
       createNewChannel(this,this.user.uid, otherUserId)
       .then(res=> {
        
-        this.getMessageList(otherUserId, BeginFrom)
+        this.getMessageList(otherUserId)
         .subscribe(res => {
          
           observer.next(res);
@@ -30,7 +30,7 @@ function getMessageList(otherUserId, BeginFrom)
       .on('value',snapshot => {
       
 
-        if(BeginFrom)
+        if(beginFrom)
         {
           //list of msgs
           result = [];
@@ -40,7 +40,7 @@ function getMessageList(otherUserId, BeginFrom)
           if(result.length)
             lastMsgId = result[result.length-1].msgId + 1;
         
-          BeginFrom = false;
+          beginFrom = false;
           observer.next(result);
         }
         else
