@@ -19,6 +19,11 @@ function initChat (userId, displayName, displayPhoto)
           {
             this.updateProfilePic(displayPhoto);
           }
+          if(displayName)
+          {
+            this.db.ref('users/' +userId + '/'+ this.user.$key + '/displayName').set(displayName);
+            this.user.displayName = displayName;
+          }
           listenToChannelListUpdate(this) 
           resolve(this.user);  
         });
