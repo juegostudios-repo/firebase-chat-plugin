@@ -1,18 +1,35 @@
 var Observable =  require('rxjs/Rx').Observable;
 
-var msgId;
+var getChannelIdForUser = require('./get-channelid');
+var createNewChannel = require('./create-channel');
 
-function getMessageList(channelId, BeginFrom)
+var lastMsgId;
+
+function getMessageList(otherUserId, BeginFrom)
 {
-  console.log("Message list");
+ 
   return new Observable((observer) => {
+
+    var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
+
     if(!channelId){ 
-      observer.error({ success: false, errorMessage:" There is no channel " }) 
+      createNewChannel(this,this.user.uid, otherUserId)
+      .then(res=> {
+       
+        this.getMessageList(otherUserId, BeginFrom)
+        .subscribe(res => {
+         
+          observer.next(res);
+        },err => console.log(err));
+      })
+     //observer.error({ success: false, errorMessage:" There is no channel " }) 
     }
     else {
       var order = 'timestamp';
       this.db.ref('/channel/' + channelId + '/messages/').orderByChild(order)
       .on('value',snapshot => {
+      
+
         if(BeginFrom)
         {
           //list of msgs
@@ -21,7 +38,8 @@ function getMessageList(channelId, BeginFrom)
             result.push(childSnapshot.val())
           });
           if(result.length)
-            msgId = result[result.length-1].msgId + 1;
+            lastMsgId = result[result.length-1].msgId + 1;
+        
           BeginFrom = false;
           observer.next(result);
         }
@@ -30,15 +48,16 @@ function getMessageList(channelId, BeginFrom)
           //receiving the new msgs
           result = [];
           var order = 'msgId';
-          this.db.ref('/channel/' + channelId + '/messages').orderByChild(order).startAt(msgId)
+          this.db.ref('/channel/' + channelId + '/messages').orderByChild(order).startAt(lastMsgId)/*.limitToLast(1)*/
           .once('value', snapshot => {
+           
             snapshot.forEach((childSnapshot) =>{
               result.push(childSnapshot.val())
             });
             if(result.length)
             {
-              msgId = result[result.length-1].msgId + 1;
-            }
+              lastMsgId = result[result.length-1].msgId + 1;
+            }  
             observer.next(result);
           })
         } 
