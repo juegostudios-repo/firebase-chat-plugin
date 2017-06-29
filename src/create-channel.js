@@ -25,9 +25,9 @@ function createNewChannel(self, myUId, otherUserId)
         // Add this newly created channel to both users channel list
         var channelName = "one2one";
         var createdAt = Date.now() + self.serverTimeOffset;
-        addToChannelList(self, myUId, member_one.key, channelId)
+        addToChannelList(self, myUId, member_one.key, channelId, otherUserId)
         .then((_)=>{
-          return addToChannelList(self, otherUserId, member_two.key, channelId)
+          return addToChannelList(self, otherUserId, member_two.key, channelId, myUId)
         })
         .then(res=>{ 
           createChannelCollection(self, members, channelId, createdAt, channelName);
@@ -70,17 +70,14 @@ function createChannelCollection(self, members, channelId, createdAt, channelNam
     createdAt: createdAt
   };
   self.db.ref('/channel/' + channelId).set(channel);
-  var obj = [{
-    channelId: channelId, 
-    members: members
-  }]
-  self.user.channelList = obj;
+ 
 }
 
-function addToChannelList(self, userId, key, channelId)
+function addToChannelList(self, userId, key, channelId, memberId)
 {
   return self.db.ref('/users/'+ userId + '/' + key + '/channelList').push({
     channelId: channelId,
+    member: memberId
   });
 } 
 
