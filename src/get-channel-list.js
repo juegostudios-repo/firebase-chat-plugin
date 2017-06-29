@@ -5,7 +5,7 @@ var flag = false;
 
 function getChannelList()
 {
-  console.log("--getChannelList--");
+ 
   return new Promise((resolve, reject) => {
     this.db.ref('/users/' + this.user.uid + '/' + this.user.$key + '/channelList/')
     .once('value').then((snapshot) => {
@@ -15,23 +15,39 @@ function getChannelList()
         snapshot.forEach((childSnapshot) => {
           userChannels.push(childSnapshot.val());
         })
+      
         this.db.ref('/channel/').orderByChild('lastActivity')
         .once('value').then((snapshot)=> {
           var allChannels = [];
           snapshot.forEach((childSnapshot) => {
-            allChannels.push({key: childSnapshot.getKey()});
+            allChannels.push({
+              key: childSnapshot.getKey(),
+              value: childSnapshot.val()
+            });
           });
           var result = [];
           allChannels.forEach(channel => {
             userChannels.forEach(userChannel => {
               if(userChannel.channelId === channel.key)
               {
-                result.push(userChannel);
+                fetchUserInfo(userChannel.member, this)
+                .then(userDetails => {
+                  result.push({
+                    channelId: channel.key, 
+                    lastMessage: channel.value.lastMessage, 
+                    userDetails
+                  });
+                  
+                  if(result.length === userChannels.length)
+                  {
+                    result = result.reverse();
+                    resolve(result);
+                  }
+                })
+                .catch(err => console.log(err)); 
               }
             })
           })
-          result = result.reverse();
-          resolve(result);
         });
       }
       else
@@ -42,12 +58,35 @@ function getChannelList()
   });
 }
 
-// function listenToUpdatedChannels()
-// {
-//   return new Observable((observer) => {
+function fetchUserInfo(otherUserId, self)
+{
+  return new Promise((resolve, reject) =>{
+    var userDetails = {
+      uid: '',
+      displayName: '',
+      displayPhoto: ''
+    };
+    self.db.ref('/users/' + otherUserId).once('value').then(snapshot => {
     
-//   });
-// }
+      snapshot.forEach(childSnapshot => {
+    
+        userDetails.uid = childSnapshot.val().uid;
+        userDetails.displayName = childSnapshot.val().displayName;
+        userDetails.displayPhoto = childSnapshot.val().displayPhoto;
+      })
+      if(userDetails.uid !== '')
+      {
+        resolve(userDetails);
+      }
+      else
+      {
+        reject({success: false, errMsg: "Result not Found"});
+      }
+    }, err=>reject({success: false, errMsg: "Result not Found"}))
+ 
+  })
+  
+}
 
 // exports.ChannelList = { getChannelList, listenToUpdatedChannels };
 module.exports = getChannelList;
