@@ -6,7 +6,7 @@ var getChannelIdForUser = require('./get-channelid');
 function setOnlineStatus()
 {
   var  lastSeenAt = firebase.database.ServerValue.TIMESTAMP;
-  userRef = this.db.ref('/users/' + this.user.uid + '/' + this.user.$key + '/lastSeenAt');
+  var userRef = this.db.ref('/users/' + this.user.uid + '/' + this.user.$key + '/lastSeenAt');
   userRef.set(lastSeenAt);
   // userOnline.onConnect().set(true);
 }
