@@ -5,40 +5,40 @@ var getChannelIdForUser = require('./get-channelid');
 
 function setOnlineStatus()
 {
-  var lastSeenAt = true;
+  var  lastSeenAt = firebase.database.ServerValue.TIMESTAMP;
   userRef = this.db.ref('/users/' + this.user.uid + '/' + this.user.$key + '/lastSeenAt');
   userRef.set(lastSeenAt);
-  userRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+  // userOnline.onConnect().set(true);
 }
 
 function getOnlineStatus(otherUserId)
 {
-  return new Observable((observer)=>{   
-    this.db.ref('/users/' + otherUserId).once('value').then(result => {
-      var key;
-      result.forEach(childKey => {
-        key = childKey.getKey()
-      })
-      if(key)
-      {
-        this.db.ref('/users/' + otherUserId + '/' + key )
-        .on('value', res => {
-          var result = res.val();
-          var lastSeen = result.lastSeenAt;
-          var onlineStatusResponse ={ };
-          if(lastSeen)
-          {
-            onlineStatusResponse.uid = otherUserId;
-            onlineStatusResponse.isOnline = lastSeen
-          }
-          observer.next(onlineStatusResponse);
+  return new Observable((observer)=>{
+    setInterval(()=>{   
+      this.db.ref('/users/' + otherUserId).once('value').then(result => {
+        var key;
+        result.forEach(childKey => {
+          key = childKey.getKey()
         })
-      }
-      else
-      {
-        observer.error({success: false, errMsg: "No user exists"});
-      }
-    });
+        if(key)
+        {
+          this.db.ref('/users/' + otherUserId + '/' + key + '/lastSeenAt/' )
+          .once('value', res => {
+            var result = res.val();
+            var lastSeen = result;
+            var onlineStatusResponse ={ };
+            onlineStatusResponse.uid = otherUserId;
+            onlineStatusResponse.isOnline = (new Date().getTime() + this.serverTimeOffset - lastSeen) < 10000 ? true : false;
+          
+            observer.next(onlineStatusResponse);
+          })
+        }
+        else
+        {
+          observer.error({success: false, errMsg: "No user exists"});
+        }
+      });
+    }, 10000);
   });
 }
 
