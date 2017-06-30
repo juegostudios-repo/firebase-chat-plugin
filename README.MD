@@ -50,50 +50,78 @@ app.updateProfilePic(filePath)
 ### Sending message
 ```
 app.sendMessage(otherUserId, message, messageType /* optional */, fileKey /* optional */)
-.then(res=>console.log(res))
-.catch(err=>console.log(err))
+.then(res => {
+  console.log(res);
+})
+.catch(err => console.log(err));
 ```
 
 ### Sending Image
 ```
-app.sendImage(imageUrl, otherUserId, type).then(res=>console.log(res), err => console.log(err));
+app.sendImage(imageUrl, otherUserId, type)
+.then(res => 
+    console.log(res),
+  err => console.log(err));
 ```
 
 ### Get file using fileKey
 ``sendImage()`` method uploads compressed image, returns fileKey. To get actual image use fileKey with ``getFile()`` method.
 ```
-app.getFile(fileKey).then(res=>{console.log(res)})
+app.getFile(fileKey)
+.then(res=> {
+  console.log(res);
+})
 ```
 
 ### Receiving Message
 
 ```
-app.getMessageList(otherUserId).subscribe(message => console.log(message), err => console.log(err));
+app.getMessageList(otherUserId)
+.subscribe(message => {
+    console.log(message);
+  }, 
+  err => console.log(err));
 ```
 
 ### Listing Recent Channels 
 ```
-app.getChannelList().then(channelList => console.log(channelList)).catch(err=> console.log(err));
+app.getChannelList()
+.then(channelList => {
+  console.log(channelList);
+})
+.catch(err=> console.log(err));
 ```
 
 ### Listening to Updated Channels
 ```
-app.listenToUpdatedChannels().subscribe( updatedChannels => console.log(updatedChannels), err => console.log(err));
+app.listenToUpdatedChannels()
+.subscribe( updatedChannels => {
+    console.log(updatedChannels);
+  },
+  err => console.log(err));
 ```
 
 ### Get Online Status
 ```
-app.getOnlineStatus(otherUserId).subscribe(onlineStatus=>console.log(onlineStatus));
+app.getOnlineStatus(otherUserId)
+.subscribe(onlineStatus=> {
+  console.log(onlineStatus);
+});
 ```
 
 ### Typing Indicator 
 To set Typing status of the user parameters required are: Receiver's UserID and ID of the <input> tag.
 ```
 app.setIsTypingStatus(otherUserId, inputTagId)
-.then(successMsg => console.log(successMsg))
+.then(successMsg => {
+  console.log(successMsg);
+})
 .catch(err=> console.log(err));
 ```
 To get Typing status the user has to send userId of the Other user 
 ```
-app.getIsTypingStatus(OtherUserId).subscribe(TypingStatus => {console.log(TypingStatus);})
+app.getIsTypingStatus(OtherUserId)
+.subscribe(TypingStatus => {
+  console.log(TypingStatus);
+});
 ```
