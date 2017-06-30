@@ -32,6 +32,7 @@ function initChat (userId, displayName, displayPhoto)
         var user={
           uid: userId,
           displayName: displayName ? displayName: "User " + userId,
+          displayPhoto: ' ',
           lastSeenAt: lastSeenAt
         };
         if(!displayPhoto)
