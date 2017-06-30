@@ -1,0 +1,29 @@
+page-home {
+  ion-content {
+    .login 
+    {
+      width: 50%;
+      height: 50%;
+      margin: 30% auto;
+    }
+    .login-textBox
+    {
+      border: 1px solid blue;
+      padding: 0 5px;
+      margin: 10px;
+    }
+    .profile-pic
+    {
+      margin-left: 25%;
+      width: 50%;
+      
+    }
+    .img-profile-pic
+    {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+}

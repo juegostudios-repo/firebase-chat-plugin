@@ -1,0 +1,82 @@
+page-chat-details {
+  .main-container
+  {
+    height: 100%;
+    position: relative;
+  }
+
+  .list-of-msgs 
+  { 
+    position: absolute;
+    border: 0.5px solid grey;
+    width: 90%;
+    height: 80%;
+    overflow: scroll;
+  }
+  .typing-status
+  {
+    position: absolute;
+    top: 85%;
+  }
+  .send-message
+  {
+    position: absolute;
+    padding: 5px;
+    bottom: 10px;
+    width: 90%;
+  }
+  .send-text-box
+  {
+    width: 77%;
+    height: 40px;
+    float: left;
+    padding: 0 10px;
+    border: 1px solid grey;
+  }
+  .send-btn
+  {
+    height: 40px; 
+    padding: 0 15px;
+    float: right;
+  }
+ 
+  .other-profile-picture
+  {
+    border: 1px solid black;
+    float: right;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+  }
+  .user-info
+  {
+    font-size: 16px;
+    font-weight: bold;
+    width: 40%;
+    margin: auto;
+    padding-top: 20px;
+  }
+  .status
+  {
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+  }
+  .online
+  {
+    background-color: green;
+  }
+  .offline
+  {
+    background-color: grey;
+  }
+  .attach-icon
+  {
+    float:right; 
+    padding-top: 20px; 
+    padding-right: 10px;
+    font-size: 28px;
+    color: blue;
+  }
+}

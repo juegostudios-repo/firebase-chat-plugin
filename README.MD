@@ -1,7 +1,12 @@
 ## Node package for firebase chat application.
 
-## This package is Under Development. Not Ready for use.  
+## This is the first beta release, please use with caution.
 
+### Installation with ionic framework 3 (currently supported)
+```
+npm i --save juegostudio-firebase-chat-plugin
+```  
+Check sample here https://github.com/juegostudio-repo/firebase-chat-plugin/tree/master/example
 ### Import Statement
 
 ```

@@ -1,1 +1,3 @@
-exports.FirebaseChat =  require('./src/firebase-init'); 
+var FirebaseChat =  require('./src/firebase-init'); 
+
+module.exports = FirebaseChat;

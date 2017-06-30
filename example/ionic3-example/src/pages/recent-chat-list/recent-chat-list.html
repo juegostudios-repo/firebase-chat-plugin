@@ -1,0 +1,37 @@
+<!--
+  Generated template for the RecentChatListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Recent Chats</ion-title>
+    <div style="float:right;" (click)="addNewChat()"><ion-icon name="add-circle" style="font-size: 24px;color:blue;margin-right:10px;"></ion-icon></div>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+   <div> 
+    <ion-list>
+      <ion-item (click)='goToChatScreen(channel)' *ngFor='let channel of channelList; let i=index'>
+        <ion-label > 
+        <div >
+          <img class="other-user-profile-pic" height="50" width="50" src="{{ channel.userDetails.displayPhoto }}" />  
+        </div>
+        <div class="single-msg">
+          <div> {{ channel.userDetails.displayName }} </div> 
+          <div *ngIf="channel.lastMessage" >
+              <p style="padding: 3px;" *ngIf="channel.lastMessage.messageType === 'text'"> {{ channel.lastMessage.message }} </p>
+              <p><ion-icon *ngIf="channel.lastMessage.messageType !== 'text'" name="camera" style="font-size: 24px;padding: 5px;"></ion-icon></p>
+          </div>
+        </div>
+         
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
