@@ -10,9 +10,7 @@ Check sample code here https://github.com/juegostudio-repo/firebase-chat-plugin/
 ### Import Statement
 
 ```
-const FirebaseChat  = require('firebase-chat-plugin').FirebaseChat;
-or
-import {FirebaseChat}  from 'firebase-chat-plugin';
+import * as FirebaseChat  from 'firebase-chat-plugin';
 ```
 
 

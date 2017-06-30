@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import { FirebaseChat } from 'firebase-chat-plugin';
+import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
 
 @Injectable()
 export class FirebaseServiceProvider {
