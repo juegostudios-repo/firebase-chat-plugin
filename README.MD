@@ -110,7 +110,7 @@ app.getOnlineStatus(otherUserId)
 ```
 
 ### Typing Indicator 
-To set Typing status of the user parameters required are: Receiver's UserID and ID of the <input> tag.
+To set Typing status of the user parameters required are: Receiver's UserID and ID of the input tag.
 ```
 app.setIsTypingStatus(otherUserId, inputTagId)
 .then(successMsg => {
