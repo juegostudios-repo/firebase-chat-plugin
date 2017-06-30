@@ -10,6 +10,7 @@ function getIsTypingStatus(otherUserId)
     {
       this.db.ref('/channel/'+channelId).on('value',(snapshot)=> {
           snapshot.forEach((childSnapshot) => {
+            var members;
             if(childSnapshot.getKey() === "members") 
             {
               members = childSnapshot.val();
