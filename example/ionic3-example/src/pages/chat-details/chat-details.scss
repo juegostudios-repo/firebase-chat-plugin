@@ -24,22 +24,30 @@ page-chat-details {
     padding: 5px;
     bottom: 10px;
     width: 90%;
+    display: flex;
+  }
+  .attach-icon-container
+  {
+    padding: 5px 15px;
   }
   .send-text-box
   {
-    width: 77%;
+     width: 77%;
     height: 40px;
     float: left;
     padding: 0 10px;
     border: 1px solid grey;
   }
   .send-btn
-  {
+  { 
     height: 40px; 
     padding: 0 15px;
-    float: right;
   }
- 
+  .attach-icon
+  {
+    font-size: 30px;
+    color: grey;
+  }
   .other-profile-picture
   {
     border: 1px solid black;
@@ -71,12 +79,5 @@ page-chat-details {
   {
     background-color: grey;
   }
-  .attach-icon
-  {
-    float:right; 
-    padding-top: 20px; 
-    padding-right: 10px;
-    font-size: 28px;
-    color: blue;
-  }
+ 
 }

@@ -8,7 +8,6 @@
   <ion-navbar>
       <div>   
         <img class="other-profile-picture" src="{{ otherProfilePic }}"  alt="..." /> 
-        <span class="attach-icon" (click)="uploadImage()"><ion-icon name="attach">  </ion-icon> </span>
         <div class="user-info">
           {{ otherUserName }} 
           <div class="status online" *ngIf="onlineStatus === true"></div>
@@ -49,6 +48,9 @@
       <div class="send-text-box">
         <ion-input [(ngModel)]="message"  placeholder="Enter message" id="inputId">
         </ion-input>
+      </div>
+      <div class="attach-icon-container">
+        <span class="attach-icon" (click)="uploadImage()"><ion-icon name="attach">  </ion-icon> </span>
       </div>
       <div>
         <button class="send-btn" (click)="sendMessage()">SEND</button>
