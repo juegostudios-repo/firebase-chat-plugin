@@ -10,7 +10,7 @@ Check sample code here https://github.com/juegostudio-repo/firebase-chat-plugin/
 ### Import Statement
 
 ```
-import * as FirebaseChat  from 'firebase-chat-plugin';
+import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
 ```
 
 
