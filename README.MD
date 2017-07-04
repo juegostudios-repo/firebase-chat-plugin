@@ -1,6 +1,14 @@
-## Node package for firebase chat application.
+Node package for firebase based chat application
+================================================
+The purpose of this node package is to quickly implement one to one chat using firebase realtime database as a backend infrastructure. You have to subscribe for your own firebase setup. Currently this package supports one to one chat with text and file messages, also supports user online status, typing status and other important features. 
 
-## This is the first beta release, please use with caution.
+### To create firebase setup follow the below steps
+1. Goto https://console.firebase.google.com
+2. Select "Add Project" and provide a name to your project
+3. Click on "Add Firebase to your web app" Option. This will show the firebase connection details.
+4. Copy the required credentials to add in your npm package.
+
+### This is the first beta release, please use with caution.
 
 ### Installation with ionic framework 3 (currently supported)
 ```
