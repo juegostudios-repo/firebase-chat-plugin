@@ -91,4 +91,19 @@ export class FirebaseServiceProvider {
     return this.fire.updateProfilePic(filePath);
   }
 
+  startVideoCall(ouid)
+  {
+    return this.fire.initiateCall(ouid);
+  }
+
+  listenToVideoCall()
+  {
+    return this.fire.listenToIncomingCall();
+  }
+
+  disconnectCall(channelId)
+  {
+    this.fire.disconnectCall(channelId);
+  }
+
 }

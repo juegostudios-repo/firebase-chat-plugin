@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
@@ -30,11 +31,17 @@ export class ChatDetailsPage {
   otherProfilePic;
   otherUserName;
 
+  videoCallOverlay = false;
+  myVideoSource;
+  remoteVideoSource:SafeUrl;
+  videoChannelId;
+
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     private _fire: FirebaseServiceProvider,
     private camera: Camera,
-    private file: File) {
+    private file: File,
+    private sanitizer: DomSanitizer) {
       if(this._fire.currentUser.displayPhoto !== ' ')
       {
         this._fire.getFile(this._fire.currentUser.displayPhoto)
@@ -84,6 +91,13 @@ export class ChatDetailsPage {
     }, err => console.log(err));
 
     this._fire.setTypingStatus(this.otherUserId, "inputId");
+    
+    this._fire.listenToVideoCall().subscribe(res=>{
+      var confir = confirm( res.initiatedBy + " Calling...");
+      if(confir){
+        this.acceptCall(res);
+      }
+    });
   }
 
   displayMessages(messages)
@@ -173,5 +187,49 @@ export class ChatDetailsPage {
     .catch(err=>{
       console.log("image error response =",err)
     });
+  }
+  acceptCall(channel)
+  {
+    this.videoChannelId = channel.channelId;
+    this._fire.fire.acceptCall(channel.channelId,channel.initiatedBy)
+    .then(res=>{
+      this.videoCallOverlay = true;
+      this.myVideoSource = this.sanitizer.bypassSecurityTrustUrl(res.localVideoSrc);
+      //this.remoteVideoSource = this.sanitizer.bypassSecurityTrustUrl(this._fire.fire.remoteStreamSrc);
+    });
+  }
+  
+  startVideoCall()
+  {
+    console.log("kjsdfk");
+    ///alert(this.otherUserId)
+    this._fire.startVideoCall(this.otherUserId)
+    .then(response=>{
+      this.videoCallOverlay = true;
+      this.videoChannelId = response.channelId;
+      this.myVideoSource = this.sanitizer.bypassSecurityTrustUrl(response.localVideoSrc);
+      //this.remoteVideoSource = this.sanitizer.bypassSecurityTrustUrl(this._fire.fire.remoteStreamSrc) ;
+    })
+    .catch(err=>{
+      console.log(err)
+    });
+  }
+
+  disconnectCall()
+  {
+    this.videoCallOverlay = false;
+    this._fire.disconnectCall(this.videoChannelId);
+  }
+
+  getUrl()
+  {
+    if(!this.remoteVideoSource && this._fire.fire.remoteStreamSrc)
+    {
+      console.log("Adding sanitized url");
+      this.remoteVideoSource = this.sanitizer.bypassSecurityTrustUrl(this._fire.fire.remoteStreamSrc);
+      return this.remoteVideoSource;
+    } else if(this.remoteVideoSource){
+      return this.remoteVideoSource;
+    }
   }
 }
