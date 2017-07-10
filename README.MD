@@ -1,6 +1,8 @@
 Node package for firebase based chat application
 ================================================
-The purpose of this node package is to quickly implement one to one chat using firebase realtime database as a backend infrastructure. You have to subscribe for your own firebase setup. Currently this package supports one to one chat with text and file messages, also supports user online status, typing status and other important features. 
+The purpose of this node package is to quickly implement one to one text & video chat using firebase realtime database as a backend infrastructure. You have to subscribe for your own firebase setup. Currently this package supports one to one chat with text and file messages, also supports user online status, typing status and other important features. 
+
+This package uses [WebRTC](https://webrtc.org/) APIs for video chat. WebRTC uses RTCPeerConnection to communicate streaming data between browsers, but also needs a mechanism to coordinate communication and to send control messages, a process known as signaling. In this package we have implemented Signaling methods using Firebase real time database.
 
 ### To create firebase setup follow the below steps
 1. Goto https://console.firebase.google.com
@@ -15,6 +17,15 @@ The purpose of this node package is to quickly implement one to one chat using f
 npm i --save juegostudio-firebase-chat-plugin
 ```  
 Check sample code here https://github.com/juegostudio-repo/firebase-chat-plugin/tree/master/example
+In ionic example, video chat requires following permissions in manifest file. 
+``` 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+```
 ### Import Statement
 
 ```
