@@ -9,7 +9,10 @@
   "keywords": [
     "firebase",
     "chat",
-    "angular2"
+    "video chat",
+    "angular2",
+    "WebRTC",
+    "ionic"
   ],
   "author": "Juego Studio Pvt Ltd <repo@juegostudio.com> (https://www.juegostudio.com/)",
   "license": "ISC",
