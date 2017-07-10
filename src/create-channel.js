@@ -9,8 +9,6 @@ function createNewChannel(self, myUId, otherUserId)
     var member_one = {
       user: user
     };
-    member_one.key = self.user.$key;
-    
     getUserDetails(self, otherUserId)
     .then((member)=> { 
       if(!member){ 
@@ -25,9 +23,9 @@ function createNewChannel(self, myUId, otherUserId)
         // Add this newly created channel to both users channel list
         var channelName = "one2one";
         var createdAt = Date.now() + self.serverTimeOffset;
-        addToChannelList(self, myUId, member_one.key, channelId, otherUserId)
+        addToChannelList(self, myUId, channelId, otherUserId)
         .then((_)=>{
-          return addToChannelList(self, otherUserId, member_two.key, channelId, myUId)
+          return addToChannelList(self, otherUserId, channelId, myUId)
         })
         .then(res=>{ 
           createChannelCollection(self, members, channelId, createdAt, channelName);
@@ -42,18 +40,14 @@ function createNewChannel(self, myUId, otherUserId)
 function getUserDetails(self, userId)
 {
   return new Promise((resolve, reject)=>{
-    
-    var usersRef = self.db.ref('/users/' +userId).orderByChild('uid').equalTo(userId).limitToLast(1);
-    
+    var usersRef = self.db.ref('/users/' +userId);
     usersRef.once('value')
     .then((snapshot) => {         
       if(snapshot.val()){
-        snapshot.forEach((childSnapshot) => { 
-          var user = {
-            uid: childSnapshot.val().uid,
-          }
-          resolve({ user: user, key: childSnapshot.getKey() });
-        });
+        var user = {
+          uid: snapshot.val().uid,
+        }
+        resolve({ user: user });
       } else{
         resolve(null);
       } 
@@ -73,9 +67,9 @@ function createChannelCollection(self, members, channelId, createdAt, channelNam
  
 }
 
-function addToChannelList(self, userId, key, channelId, memberId)
+function addToChannelList(self, userId, channelId, memberId)
 {
-  return self.db.ref('/users/'+ userId + '/' + key + '/channelList').push({
+  return self.db.ref('/users/'+ userId + '/channelList').push({
     channelId: channelId,
     member: memberId
   });

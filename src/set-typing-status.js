@@ -3,8 +3,6 @@ var getChannelIdForUser = require('./get-channelid');
 
 function setIsTypingStatus(otherUserId, htmlTagId) 
 {
-  console.log("set Typing status");
- 
   var tag = document.getElementById(htmlTagId);
   tag.addEventListener("focusin", () => {
    

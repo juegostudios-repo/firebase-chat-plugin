@@ -4,7 +4,7 @@ var Observable =  require('rxjs/Rx').Observable;
 function listenToUpdatedChannels()
 {
   return new Observable((observer) => {
-    var msgRef = this.db.ref('users/' + this.user.uid + '/' + this.user.$key + '/messageReceived/');
+    var msgRef = this.db.ref('users/' + this.user.uid + '/messageReceived/');
     msgRef.on('value', snapshot => {
       var channels = [];
       snapshot.forEach((childSnapShot) => {

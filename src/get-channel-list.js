@@ -7,14 +7,14 @@ function getChannelList()
 {
  
   return new Promise((resolve, reject) => {
-    this.db.ref('/users/' + this.user.uid + '/' + this.user.$key + '/channelList/')
+    this.db.ref('/users/' + this.user.uid + '/channelList/')
     .once('value').then((snapshot) => {
       if(snapshot.val())
       {
         var userChannels = [];
         snapshot.forEach((childSnapshot) => {
           userChannels.push(childSnapshot.val());
-        })
+        })  
       
         this.db.ref('/channel/').orderByChild('lastActivity')
         .once('value').then((snapshot)=> {
@@ -44,7 +44,9 @@ function getChannelList()
                     resolve(result);
                   }
                 })
-                .catch(err => console.log(err)); 
+                .catch(err => {
+                  reject(err);
+                 }); 
               }
             })
           })
@@ -67,13 +69,9 @@ function fetchUserInfo(otherUserId, self)
       displayPhoto: ''
     };
     self.db.ref('/users/' + otherUserId).once('value').then(snapshot => {
-    
-      snapshot.forEach(childSnapshot => {
-    
-        userDetails.uid = childSnapshot.val().uid;
-        userDetails.displayName = childSnapshot.val().displayName;
-        userDetails.displayPhoto = childSnapshot.val().displayPhoto;
-      })
+      userDetails.uid = snapshot.val().uid;
+      userDetails.displayName = snapshot.val().displayName;
+      userDetails.displayPhoto = snapshot.val().displayPhoto;
       if(userDetails.uid !== '')
       {
         resolve(userDetails);
@@ -88,6 +86,5 @@ function fetchUserInfo(otherUserId, self)
   
 }
 
-// exports.ChannelList = { getChannelList, listenToUpdatedChannels };
 module.exports = getChannelList;
 

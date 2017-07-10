@@ -7,7 +7,7 @@ function updateProfilePic(imagePath)
       return this.db.ref('/file/' + key).set(data);
     })
     .then((done)=>{
-      return this.db.ref('/users/'+ this.user.uid +'/'+ this.user.$key +'/displayPhoto').set(key);
+      return this.db.ref('/users/'+ this.user.uid + '/displayPhoto').set(key);
     })
     .then((response)=>{
       this.user.displayPhoto = key;

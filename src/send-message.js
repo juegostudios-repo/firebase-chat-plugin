@@ -52,16 +52,10 @@ function sendMessage(otherUserId, message, messageType, fileKey)
 
 function pushChannelIdToReceiver(otherUserId, channelId, self)
 {
-  self.db.ref('/users/' + otherUserId).once('value').then(result => {
-    var key;
-    result.forEach(childKey => {
-      key = childKey.getKey()
-    })
-    var channelObj = {
-      channelId: channelId
-    }
-    self.db.ref('/users/' + otherUserId + '/' + key + '/messageReceived/').push(channelObj);
-  })
+  var channelObj = {
+    channelId: channelId
+  }
+  self.db.ref('/users/' + otherUserId + '/messageReceived/').push(channelObj);
 }
 
 module.exports = sendMessage;

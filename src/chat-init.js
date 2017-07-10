@@ -9,25 +9,24 @@ function initChat (userId, displayName, displayPhoto)
 
   const userRef = this.db.ref('users/' +userId);
   return new Promise((resolve, reject)=>{
-    userRef.orderByChild('uid').equalTo(userId).limitToLast(1).once('value')
+    userRef.once('value')
     .then((snapshot) => {         
       if(snapshot.val()){
-        snapshot.forEach((childSnapshot) => {
-          this.user = childSnapshot.val();
-          this.user.$key = childSnapshot.getKey();
-          if(displayPhoto)
-          {
-            this.updateProfilePic(displayPhoto);
-          }
-          if(displayName)
-          {
-            this.db.ref('users/' +userId + '/'+ this.user.$key + '/displayName').set(displayName);
-            this.user.displayName = displayName;
-          }
-          listenToChannelListUpdate(this) 
-          resolve(this.user);  
-        });
-      } else{
+        this.user = snapshot.val();
+        if(displayPhoto)
+        {
+          this.updateProfilePic(displayPhoto);
+        }
+        if(displayName)
+        {
+          this.db.ref('users/' +userId + '/displayName').set(displayName);
+          this.user.displayName = displayName;
+        }
+        listenToChannelListUpdate(this) 
+        resolve(this.user);  
+      } 
+      else 
+      {
         lastSeenAt = firebase.database.ServerValue.TIMESTAMP;
         var user={
           uid: userId,
@@ -39,9 +38,8 @@ function initChat (userId, displayName, displayPhoto)
         {
           user.displayPhoto= " ";
         }
-        userRef.push(user)
+        userRef.set(user)
         .then((pushResponse) => {
-          user.$key = pushResponse.key;
           this.user = user;
           if(displayPhoto)
           {
@@ -60,7 +58,7 @@ function initChat (userId, displayName, displayPhoto)
 function listenToChannelListUpdate(self)
 {
   
-  self.db.ref('/users/'+ self.user.uid + '/' + self.user.$key + '/channelList')
+  self.db.ref('/users/'+ self.user.uid + '/channelList')
   .on("value", (snap)=> {
   
     self.user.channelList = [];

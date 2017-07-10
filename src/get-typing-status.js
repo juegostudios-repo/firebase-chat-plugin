@@ -3,7 +3,6 @@ var getChannelIdForUser = require('./get-channelid');
 
 function getIsTypingStatus(otherUserId) 
 {
-  console.log("get Typing status");
   return new Observable((observer) => {
     var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
     if(channelId) 

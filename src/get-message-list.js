@@ -7,17 +7,19 @@ var lastMsgId;
 
 function getMessageList(otherUserId)
 {
+ 
   return new Observable((observer) => {
     var beginFrom = true;
     var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
     if(!channelId){ 
       createNewChannel(this,this.user.uid, otherUserId)
-      .then(res=> {  
+      .then(res=> {
         this.getMessageList(otherUserId)
         .subscribe(res => {
           observer.next(res);
-        },err => console.log(err));
+        },err => observer.error({ success: false, errorMessage:" Could not subscribe to a channel " }) );
       })
+      .catch(err => observer.error(err));
     }
     else {
       var order = 'timestamp';
@@ -26,12 +28,13 @@ function getMessageList(otherUserId)
         if(beginFrom)
         {
           //list of msgs
-          var result = [];
+          result = [];
           snapshot.forEach((childSnapshot) =>{
             result.push(childSnapshot.val())
           });
           if(result.length)
             lastMsgId = result[result.length-1].msgId + 1;
+        
           beginFrom = false;
           observer.next(result);
         }
@@ -42,6 +45,7 @@ function getMessageList(otherUserId)
           var order = 'msgId';
           this.db.ref('/channel/' + channelId + '/messages').orderByChild(order).startAt(lastMsgId)/*.limitToLast(1)*/
           .once('value', snapshot => {
+           
             snapshot.forEach((childSnapshot) =>{
               result.push(childSnapshot.val())
             });
@@ -56,4 +60,5 @@ function getMessageList(otherUserId)
     }
   });
 }
+
 module.exports = getMessageList;
