@@ -154,7 +154,7 @@ app.getOnlineStatus(otherUserId)
 ```
 
 ### Typing Indicator 
-To set Typing status of the user parameters required are: Receiver's UserID and ID of the input tag.
+To set Typing status of the user parameters required are: Receiver's UserID and id of the ```input``` html tag.
 ```
 app.setIsTypingStatus(otherUserId, inputTagId)
 .then(successMsg => {
@@ -179,7 +179,7 @@ app.getIsTypingStatus(OtherUserId)
     })
     .catch(err=>{ console.log(err) });
 ```
-This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as src for html video tag.
+This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as src for html ``video`` tag.
 
 ### Listening to incoming Video call
 
@@ -187,7 +187,7 @@ This method will return Promise, if it is successful it will return channelId an
   app.listenToIncomingCall()
     .subscribe(res=>{console.log(res)})
 ``` 
-This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated the call) as response object properties. This response properties are required while accept this call.  
+This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated this call) as response object properties. This response properties are required while accepting this call.  
 
 ### Accepting Video call
 
