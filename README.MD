@@ -35,7 +35,7 @@ import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
 
 ### Initialize your app
 ```
-const config = {
+const firebaseConfig = {
   apiKey: "xxxxxx",
   authDomain: "xxxxxxx.firebaseapp.com",
   databaseURL: "https://xxxxxxx.firebaseio.com",
@@ -44,21 +44,43 @@ const config = {
   messagingSenderId: "XXXXXXXXXXX"
 };
 ```
-
-You have to get this config from firebase developer console by creating new project.
+You have to get  firebaseConfig from firebase developer console by creating new project.
+```
+// videoChatServerConfig is optional.
+const videoChatServerConfig = {
+    'iceServers': [
+      {
+        'urls': 'stun:stun.l.google.com:19302'
+      },
+      {
+        'urls': 'yourturn server',
+        'username': 'userName',
+        'credential': 'credentials'
+      },
+      {
+        'urls': 'turn server',
+        'username': 'username',
+        'credential' : 'credentials'
+      }
+    ]
+  }
+```
+videoChatServerConfig is an optional parameter. URLs for STUN and TURN server can be set using this argument.
+For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/).
 
 ```
-var app = new FirebaseChat(config);
+var app = new FirebaseChat(firebaseConfig, videoChatServerConfig); /* video chat server config is optional parameter*/
 ```
 
 ### Initialize chat
 ```
 app.initChat(userID, displayName, displayPic)
-.then(res=>{
-  console.log(res);// return user object
+.then(user=>{
+  console.log(user);// return user object
 })
 .catch(err=> console.log(err));
 ```
+This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
 
 ### Updating user profile picture
 ```
@@ -147,3 +169,39 @@ app.getIsTypingStatus(OtherUserId)
   console.log(TypingStatus);
 });
 ```
+
+### Start Video Chat
+
+```
+  app.initiateCall(otherUid)
+    .then(response=>{
+      console.log(response);
+    })
+    .catch(err=>{ console.log(err) });
+```
+This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as src for html video tag.
+
+### Listening to incoming Video call
+
+```
+  app.listenToIncomingCall()
+    .subscribe(res=>{console.log(res)})
+``` 
+This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated the call) as response object properties. This response properties are required while accept this call.  
+
+### Accepting Video call
+
+```
+  app.acceptCall(channelId, initiatedBy)
+    .then(response=>console.log(res))
+```
+This method will accept incoming call. As a response you'll get localVideoSrc as response object prop.
+
+### Displaying remote video streams
+After completing signaling you can add ``app.remoteStreamSrc`` as src for remote ``video`` html tag.
+
+### Disconnecting video call
+```
+  app.disconnectCall(channelId)  
+```
+This method will stop both remote & local streams. Channel which was used for signaling will be deleted.
