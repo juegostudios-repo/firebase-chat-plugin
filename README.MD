@@ -1,6 +1,6 @@
 Node package for firebase based chat application
 ================================================
-The purpose of this node package is to quickly implement one to one text & video chat using firebase realtime database as a backend infrastructure. You have to subscribe for your own firebase setup. Currently this package supports one to one chat with text and file messages, also supports user online status, typing status and other important features. 
+The purpose of this node package is to quickly implement one to one text & [video](#start-video-chat) chat using firebase realtime database as a backend infrastructure. You have to subscribe for your own firebase setup. Currently this package supports one to one chat with text and file messages, also supports user online status, typing status and other important features. 
 
 This package uses [WebRTC](https://webrtc.org/) APIs for video chat. WebRTC uses RTCPeerConnection to communicate streaming data between browsers, but also needs a mechanism to coordinate communication and to send control messages, a process known as signaling. In this package we have implemented Signaling methods using Firebase real time database.
 
