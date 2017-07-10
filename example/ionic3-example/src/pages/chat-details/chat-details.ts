@@ -225,7 +225,6 @@ export class ChatDetailsPage {
   {
     if(!this.remoteVideoSource && this._fire.fire.remoteStreamSrc)
     {
-      console.log("Adding sanitized url");
       this.remoteVideoSource = this.sanitizer.bypassSecurityTrustUrl(this._fire.fire.remoteStreamSrc);
       return this.remoteVideoSource;
     } else if(this.remoteVideoSource){
