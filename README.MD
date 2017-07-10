@@ -179,7 +179,7 @@ app.getIsTypingStatus(OtherUserId)
     })
     .catch(err=>{ console.log(err) });
 ```
-This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as src for html ``video`` tag.
+This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as ``src`` for html ``video`` tag.
 
 ### Listening to incoming Video call
 
@@ -198,7 +198,7 @@ This method will be listening to incoming video calls. If there is a incoming ca
 This method will accept incoming call. As a response you'll get localVideoSrc as response object prop.
 
 ### Displaying remote video streams
-After completing signaling you can add ``app.remoteStreamSrc`` as src for remote ``video`` html tag.
+After completing signaling you can add ``app.remoteStreamSrc`` as ``src`` for remote ``video`` html tag.
 
 ### Disconnecting video call
 ```
