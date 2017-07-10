@@ -16,14 +16,40 @@ export class FirebaseServiceProvider {
 
   initializeConfig()
   {
-    this.fire = new FirebaseChat({
-      apiKey: "AIzaSyAzEUvyyeaBCQW4PPC_i8W11tOPxdwg_q0",
-      authDomain: "ionic-chat-app-f71b4.firebaseapp.com",
-      databaseURL: "https://ionic-chat-app-f71b4.firebaseio.com",
-      projectId: "ionic-chat-app-f71b4",
-      storageBucket: "ionic-chat-app-f71b4.appspot.com",
-      messagingSenderId: "499915985318"
-    }); 
+    var firebaseConfig; 
+    /* Your firebase config can go here */
+    /* It looks like
+      var config = {
+        apiKey: "xyz",
+        authDomain: "xyz.firebaseapp.com",
+        databaseURL: "xyz.firebaseio.com",
+        projectId: "xyz",
+        storageBucket: "xyz.appspot.com",
+        messagingSenderId: "0000000000"
+      };
+    */
+    var videoChatServerConfig;    
+      /* Your STUN & TURN server config can go here*/
+      /* It looks like 
+      var videoChatServerConfig = {
+      'iceServers': [
+        {
+          'urls': 'stun:stun.l.google.com:19302'
+        },
+        {
+          'urls': 'yourturn server',
+          'username': 'userName',
+          'credential': 'credentials'
+        },
+        {
+          'urls': 'turn server',
+          'username': 'username',
+          'credential' : 'credentials'
+        }
+      ]
+      }
+    */ 
+    this.fire = new FirebaseChat(firebaseConfig, videoChatServerConfig); 
   }
 
   init(userId, userName?, profilePic?)
