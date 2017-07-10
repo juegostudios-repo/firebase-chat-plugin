@@ -12,6 +12,7 @@
           {{ otherUserName }} 
           <div class="status online" *ngIf="onlineStatus === true"></div>
           <div class="status offline" *ngIf="onlineStatus === false"></div>
+          <ion-icon class="video-call"name="videocam" color="black" (click)="startVideoCall()"></ion-icon>
         </div>
       </div>
           
@@ -57,5 +58,13 @@
       </div>
     </div>
   </div>
-   
+  <div class="video-call-overlay" *ngIf="videoCallOverlay">
+    <video class="remote-video" autoplay [src]="getUrl()"></video>
+    <video class="my-video" autoplay muted [src]="myVideoSource"></video>
+    <div class="disconnect-call">
+      <button ion-button (click)="disconnectCall()" color="danger">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </div>
+  </div>
 </ion-content>

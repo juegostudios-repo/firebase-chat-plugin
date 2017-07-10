@@ -79,5 +79,35 @@ page-chat-details {
   {
     background-color: grey;
   }
- 
+  .video-call
+  {
+    padding: 10px;
+    margin: 10px;    
+  }
+  .video-call-overlay{
+    position: absolute;
+    top:0px;
+    left: 0px;
+    height:100%;
+    width:100%;
+    .remote-video{
+      height: 100%;
+      width:100%;
+      background-color: #dddddd;
+    }
+    .my-video{
+      position: absolute;
+      bottom:0px;
+      right:0px;
+      height: 30%;
+      width: 30%;
+      z-index: 10000000;
+      //background-color: #00ff00;
+    }
+    .disconnect-call{
+      position: absolute;
+      bottom: 10%;
+      left: 45%;
+    }
+  }
 }
