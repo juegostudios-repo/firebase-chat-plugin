@@ -16,8 +16,8 @@ This package uses [WebRTC](https://webrtc.org/) APIs for video chat. WebRTC uses
 ```
 npm i --save juegostudio-firebase-chat-plugin
 ```  
-Check sample code here https://github.com/juegostudio-repo/firebase-chat-plugin/tree/master/example
-In ionic example, video chat requires following permissions in manifest file. 
+Check sample code here https://github.com/juegostudio-repo/firebase-chat-plugin/tree/master/example.
+In ionic example, video chat requires following permissions in AndroidManifest file. 
 ``` 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera" />
