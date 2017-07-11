@@ -46,7 +46,7 @@ const firebaseConfig = {
 ```
 You have to get  firebaseConfig from firebase developer console by creating new project.
 ```
-// videoChatServerConfig is optional.
+// videoChatServerConfig looks similar to this.
 const videoChatServerConfig = {
     'iceServers': [
       {
