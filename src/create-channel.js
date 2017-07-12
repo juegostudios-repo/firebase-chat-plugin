@@ -71,6 +71,7 @@ function addToChannelList(self, userId, channelId, memberId)
 {
   return self.db.ref('/users/'+ userId + '/channelList').push({
     channelId: channelId,
+    channelType: 'one2one',
     member: memberId
   });
 } 
