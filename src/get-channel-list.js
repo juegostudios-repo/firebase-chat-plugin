@@ -30,23 +30,50 @@ function getChannelList()
             userChannels.forEach(userChannel => {
               if(userChannel.channelId === channel.key)
               {
-                fetchUserInfo(userChannel.member, this)
-                .then(userDetails => {
-                  result.push({
-                    channelId: channel.key, 
-                    lastMessage: channel.value.lastMessage, 
-                    userDetails
-                  });
-                  
-                  if(result.length === userChannels.length)
-                  {
-                    result = result.reverse();
-                    resolve(result);
-                  }
-                })
-                .catch(err => {
-                  reject(err);
-                 }); 
+                //One2One chat
+                if(userChannel.member)
+                {
+                  fetchUserInfo(userChannel.member, this)
+                  .then(userDetails => {
+                    result.push({
+                      channelId: channel.key, 
+                      channelType: channel.value.channelName,
+                      lastMessage: channel.value.lastMessage, 
+                      userDetails
+                    });
+                    
+                    if(result.length === userChannels.length)
+                    {
+                      result = result.reverse();
+                      resolve(result);
+                    }
+                  })
+                  .catch(err => {
+                    reject(err);
+                  }); 
+                }
+
+                //Group chat
+                if(userChannel.groupId)
+                {
+                  fetchGroupInfo(this, userChannel.channelId)
+                  .then(userDetails => {
+                    result.push({
+                      channelId: channel.key, 
+                      channelType: channel.value.channelName,
+                      lastMessage: channel.value.lastMessage, 
+                      userDetails
+                    });
+                    if(result.length === userChannels.length)
+                    {
+                      result = result.reverse();
+                      resolve(result);
+                    }
+                  })
+                  .catch(err => {
+                    reject(err);
+                  }); 
+                }
               }
             })
           })
@@ -82,6 +109,36 @@ function fetchUserInfo(otherUserId, self)
       }
     }, err=>reject({success: false, errMsg: "Result not Found"}))
  
+  })
+  
+}
+
+function fetchGroupInfo(self, channelId)
+{
+  var userDetails = {
+    uid: '',
+    displayName: '',
+    displayPhoto: ''
+  };
+  return new Promise((resolve, reject) => {
+    self.db.ref('channel/' + channelId).once('value')
+    .then(snapshot => {
+      if(snapshot.val())
+      {
+        
+        userDetails.uid = snapshot.val().groupId;
+        userDetails.displayName = snapshot.val().groupName;
+        userDetails.displayPhoto = snapshot.val().groupPic;
+        if(userDetails.uid !== '')
+        {
+          resolve(userDetails);
+        }
+        else
+        {
+          reject({success: false, errMsg: "Result not Found"});
+        }
+      }
+    },err=>reject({success: false, errMsg: "Result not Found"}))
   })
   
 }
