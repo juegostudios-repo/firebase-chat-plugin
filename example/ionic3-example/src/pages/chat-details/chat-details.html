@@ -8,11 +8,14 @@
   <ion-navbar>
       <div>   
         <img class="other-profile-picture" src="{{ otherProfilePic }}"  alt="..." /> 
-        <div class="user-info">
+        <div class="user-info" *ngIf="channelType === 'one2one'">
           {{ otherUserName }} 
           <div class="status online" *ngIf="onlineStatus === true"></div>
           <div class="status offline" *ngIf="onlineStatus === false"></div>
           <ion-icon class="video-call"name="videocam" color="black" (click)="startVideoCall()"></ion-icon>
+        </div>
+        <div class="user-info" (click)="menuItems()" *ngIf="channelType === 'group'">
+          {{ otherUserName }}
         </div>
       </div>
           

@@ -1,0 +1,26 @@
+page-select-participant {
+  .main-container
+  {
+    margin-top: 20px;
+  }
+  .input-box
+  {
+    border: 1px solid grey;
+    padding: 0 10px;
+    margin-bottom: 20px;
+  }
+  .btns
+  {
+    display: flex;
+    width: 100%;
+  }
+  .single-btn
+  {
+    flex: 1;
+    margin: 5px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+}

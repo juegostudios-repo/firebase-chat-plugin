@@ -3,8 +3,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { FirebaseServiceProvider } from '../../providers/firebase-service';
 
-import { ChatDetailsPage } from '../chat-details/chat-details';
-import { AddNewChatPage } from '../add-new-chat/add-new-chat';
+import { ChatDetailsPage }  from '../chat-details/chat-details';
+import { AddNewChatPage }   from '../add-new-chat/add-new-chat';
+import { CreateGroupPage }  from '../create-group/create-group';
 
 /**
  * Generated class for the RecentChatListPage page.
@@ -35,10 +36,12 @@ export class RecentChatListPage {
 
   ionViewDidEnter() 
   {
+    console.log('ionViewDidEnter RecentChatListPage');
      this._fire.getRecentChatList()
     .then((channels: any) => {
       if(channels)
-      {  
+      { console.log("channel list:: ");
+        console.log(channels);
         this.displayChannelList(channels)
       }
     })
@@ -59,10 +62,10 @@ export class RecentChatListPage {
 
   displayChannelList(channels)
   {
-   
+  
     this.channelList = channels;
     this.channelList.forEach((channel, i) => {
-   
+  
       if(channel.userDetails.displayPhoto !== ' ')
       { 
       
@@ -80,7 +83,8 @@ export class RecentChatListPage {
     var obj = {
       uid: channel.userDetails.uid,
       displayName: channel.userDetails.displayName,
-      displayPhoto: channel.userDetails.displayPhoto
+      displayPhoto: channel.userDetails.displayPhoto,
+      channelType: channel.channelType
     };
     this.navCtrl.push(ChatDetailsPage, { otherUser: obj });
   }
@@ -89,4 +93,13 @@ export class RecentChatListPage {
   {
     this.navCtrl.push(AddNewChatPage);
   }
+
+  createNewGroup()
+  {
+    console.log("clicked");
+    this.navCtrl.push(CreateGroupPage);
+  }
+
+  
+
 }

@@ -1,0 +1,36 @@
+<!--
+  Generated template for the CreateGroupPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Create Group</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content >
+  <div class="main-container">
+    <div class="group-id">
+      <ion-input [(ngModel)]="groupId" placeholder="Enter Group ID"> </ion-input>
+    </div> 
+    <div class="group-name">
+      <ion-input [(ngModel)]="groupName" placeholder="Enter Group Name"> </ion-input>
+    </div> 
+    <div *ngIf="participantsList"> Selected participants are: 
+      <div class="list-of-users" *ngFor="let user of participantsList">
+        {{ user }}
+      </div>
+    </div>
+    <div class="add-users">
+      <button class="add-users-btn" (click) ="selectUser()" >ADD PARTICIPANTS</button>
+    </div>
+    <div class="create-btn">
+      <button class="add-users-btn" [disabled]="!participantsList" (click)= "createGroup()" >CREATE</button>
+    </div>
+  </div>
+</ion-content>

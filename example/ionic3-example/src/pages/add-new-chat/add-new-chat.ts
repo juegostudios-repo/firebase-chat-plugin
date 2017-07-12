@@ -24,6 +24,6 @@ export class AddNewChatPage {
 
   createChat()
   { 
-    this.navCtrl.push(ChatDetailsPage, { otherUser: { uid: this.otherUserId, displayPhoto: ' ', displayName: "  "} });
+    this.navCtrl.push(ChatDetailsPage, { otherUser: { uid: this.otherUserId, displayPhoto: ' ', displayName: "  ", channelType: "one2one"} });
   }
 }

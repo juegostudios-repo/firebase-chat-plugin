@@ -71,9 +71,9 @@ export class FirebaseServiceProvider {
     return this.fire.getChannelList();
   }
 
-  getMessageList(userID)
+  getMessageList(userID, channelType)
   {
-    return this.fire.getMessageList(userID);
+    return this.fire.getMessageList(userID, channelType);
   }
   sendMessage(uid, message?)
   {
@@ -132,4 +132,23 @@ export class FirebaseServiceProvider {
     this.fire.disconnectCall(channelId);
   }
 
+  createGroup(userIds ,groupId, groupName, grpProfilePic?)
+  {
+    return this.fire.groupCreate(userIds, groupId, groupName);
+  }
+
+  addGrpMembers(userIds, grpId)
+  {
+    return this.fire.groupAddMember(userIds, grpId);
+  }
+
+  sendGrpMsg(grpId, message)
+  {
+    return this.fire.groupSendMessage(grpId, message);
+  }
+
+  deleteGroup(grpId)
+  {
+    return this.fire.groupDelete(grpId);
+  }
 }

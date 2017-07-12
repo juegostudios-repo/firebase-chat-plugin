@@ -1,0 +1,36 @@
+page-create-group {
+  .main-container
+  {
+    width: 90%;
+    margin: 150px auto;
+  }
+  .group-id
+  {
+    border: 1px solid grey;
+    padding: 0 10px;
+    height: 40px;
+    margin: 20px 0;
+  }
+  .group-name
+  {
+    border: 1px solid grey;
+    padding: 0 10px;
+    height: 40px;
+    margin: 20px 0;
+  }
+  .add-users
+  {
+  }
+  .add-users-btn
+  {
+    margin: 10px 0;
+    width: 100%;
+    padding: 14px 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .create-btn
+  {
+    margin: 10px 0;
+  }
+}

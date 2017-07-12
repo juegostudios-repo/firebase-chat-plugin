@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { ViewChild } from '@angular/core';
+import { Navbar } from 'ionic-angular';
 import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 
+import { GroupMenuPage } from '../group-menu/group-menu';
+import { RecentChatListPage } from '../recent-chat-list/recent-chat-list';
 
 import { FirebaseServiceProvider } from '../../providers/firebase-service';
 /**
@@ -19,6 +23,8 @@ import { FirebaseServiceProvider } from '../../providers/firebase-service';
   templateUrl: 'chat-details.html',
 })
 export class ChatDetailsPage {
+   @ViewChild(Navbar) navbar: Navbar;
+
   userId = localStorage.getItem("user_id");
   channel_id;
   messageList = [];
@@ -30,6 +36,7 @@ export class ChatDetailsPage {
   myProfilePic;
   otherProfilePic;
   otherUserName;
+  channelType;
 
   videoCallOverlay = false;
   myVideoSource;
@@ -54,11 +61,17 @@ export class ChatDetailsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatDetailsPage');
+     this.navbar.backButtonClick = (e: UIEvent) => {
+    // Print this event to the console
+      this.navCtrl.push(RecentChatListPage);
+    
+    }
   }
 
   ionViewDidEnter()
   {
     var otherUser = this.navParams.get('otherUser');
+    this.channelType = otherUser.channelType;
     this.otherUserId = otherUser.uid;
     this.otherUserName = otherUser.displayName;
     this.otherUserPic = otherUser.displayPhoto;
@@ -67,30 +80,33 @@ export class ChatDetailsPage {
       this.otherProfilePic = this.otherUserPic;
     }   
     
-    this._fire.getOnlineStatus(this.otherUserId)
-    .subscribe(res => {  
-      this.setOnlineStatus(res);
-    }, err => console.log(err));
+    if(this.channelType === "one2one")
+    {
+      this._fire.getOnlineStatus(this.otherUserId)
+      .subscribe(res => {  
+        this.setOnlineStatus(res);
+      }, err => console.log(err));
 
-    this._fire.getTypingStatus(this.otherUserId)
-    .subscribe((res : any) => {
-      if(res)
-      {
-        console.log(res);
-        this.typingStatus = res.typingIndicator;
-      }
-        
-    }, err => console.log(err));
+      this._fire.getTypingStatus(this.otherUserId)
+      .subscribe((res : any) => {
+        if(res)
+        {
+          console.log(res);
+          this.typingStatus = res.typingIndicator;
+        }
+          
+      }, err => console.log(err));
+
+      this._fire.setTypingStatus(this.otherUserId, "inputId");
+    }
     
-    this._fire.getMessageList(this.otherUserId)
+    this._fire.getMessageList(this.otherUserId, this.channelType)
     .subscribe(res => {
       if(res)
       {
         this.displayMessages(res);
       }
     }, err => console.log(err));
-
-    this._fire.setTypingStatus(this.otherUserId, "inputId");
     
     this._fire.listenToVideoCall().subscribe(res=>{
       var confir = confirm( res.initiatedBy + " Calling...");
@@ -109,13 +125,26 @@ export class ChatDetailsPage {
   {
     var message = this.message;
     var uid = this.otherUserId;
-    this._fire.sendMessage(uid, message)
-    .then(res => {
-      console.log(res);
-    })
-    .catch(err => { 
-      console.log(err);
-     });
+    if(this.channelType === "one2one")
+    {
+      console.log("One2One chat");
+      this._fire.sendMessage(uid, message)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => { 
+        console.log(err);
+      });
+    }
+    else
+    {
+      console.log("Group chat");
+      this._fire.sendGrpMsg(uid, message)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => console.log(err));
+    }
   }
 
   setOnlineStatus(status)
@@ -230,5 +259,16 @@ export class ChatDetailsPage {
     } else if(this.remoteVideoSource){
       return this.remoteVideoSource;
     }
+  }
+
+  menuItems()
+  {
+    console.log("clicked menu");
+    this.navCtrl.push(GroupMenuPage, {groupId: this.otherUserId});
+  }
+
+  ionViewWillEnter()
+  {
+    this.messageList = [];
   }
 }
