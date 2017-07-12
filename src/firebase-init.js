@@ -19,7 +19,8 @@ const listenToIncomingCall = require('./video-chat/listen-incomingcall');
 const acceptCall = require('./video-chat/accept-call');
 const disconnectCall = require('./video-chat/disconnect-call');
 
-function FirebaseChat(config) {
+function FirebaseChat(config, videoChatPCConfig) {
+    this.pcConfig = videoChatPCConfig;
     this.app = firebase.initializeApp(config);
     this.db = this.app.database();
     this.initChat = initChat;

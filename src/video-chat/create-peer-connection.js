@@ -5,8 +5,9 @@ function createPeerConnection(channelid, slf)
   channelId = channelid;
   //console.log("Create peer connection ",channelId);
   self = slf;
- try{  
-    self.pc = new RTCPeerConnection(null);
+ try{
+    var pcConfig = self.pcConfig ? self.pcConfig : null;  
+    self.pc = new RTCPeerConnection(pcConfig);
     self.pc.onicecandidate = handleIceCandidate;
     self.pc.onaddstream = handleRemoteStreamAdded;
     self.pc.onremovestream = handleRemoteStreamRemoved;

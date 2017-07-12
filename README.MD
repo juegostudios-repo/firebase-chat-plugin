@@ -1,6 +1,6 @@
 Node package for firebase based chat application
 ================================================
-The purpose of this node package is to quickly implement one to one text & video chat using firebase realtime database as a backend infrastructure. You have to subscribe for your own firebase setup. Currently this package supports one to one chat with text and file messages, also supports user online status, typing status and other important features. 
+The purpose of this node package is to quickly implement one to one text & [video](#start-video-chat) chat using firebase realtime database as a backend infrastructure. You have to subscribe for your own firebase setup. Currently this package supports one to one chat with text and file messages, also supports user online status, typing status and other important features. 
 
 This package uses [WebRTC](https://webrtc.org/) APIs for video chat. WebRTC uses RTCPeerConnection to communicate streaming data between browsers, but also needs a mechanism to coordinate communication and to send control messages, a process known as signaling. In this package we have implemented Signaling methods using Firebase real time database.
 
@@ -35,7 +35,7 @@ import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
 
 ### Initialize your app
 ```
-const config = {
+const firebaseConfig = {
   apiKey: "xxxxxx",
   authDomain: "xxxxxxx.firebaseapp.com",
   databaseURL: "https://xxxxxxx.firebaseio.com",
@@ -44,21 +44,43 @@ const config = {
   messagingSenderId: "XXXXXXXXXXX"
 };
 ```
-
-You have to get this config from firebase developer console by creating new project.
+You have to get  firebaseConfig from firebase developer console by creating new project.
+```
+// videoChatServerConfig looks similar to this.
+const videoChatServerConfig = {
+    'iceServers': [
+      {
+        'urls': 'stun:stun.l.google.com:19302'
+      },
+      {
+        'urls': 'yourturn server',
+        'username': 'userName',
+        'credential': 'credentials'
+      },
+      {
+        'urls': 'turn server',
+        'username': 'username',
+        'credential' : 'credentials'
+      }
+    ]
+  }
+```
+videoChatServerConfig is an optional parameter. URLs for STUN and TURN server can be set using this argument.
+For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/).
 
 ```
-var app = new FirebaseChat(config);
+var app = new FirebaseChat(firebaseConfig, videoChatServerConfig); /* video chat server config is optional parameter*/
 ```
 
 ### Initialize chat
 ```
 app.initChat(userID, displayName, displayPic)
-.then(res=>{
-  console.log(res);// return user object
+.then(user=>{
+  console.log(user);// return user object
 })
 .catch(err=> console.log(err));
 ```
+This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
 
 ### Updating user profile picture
 ```
@@ -132,7 +154,7 @@ app.getOnlineStatus(otherUserId)
 ```
 
 ### Typing Indicator 
-To set Typing status of the user parameters required are: Receiver's UserID and ID of the input tag.
+To set Typing status of the user parameters required are: Receiver's UserID and id of the ```input``` html tag.
 ```
 app.setIsTypingStatus(otherUserId, inputTagId)
 .then(successMsg => {
@@ -147,3 +169,39 @@ app.getIsTypingStatus(OtherUserId)
   console.log(TypingStatus);
 });
 ```
+
+### Start Video Chat
+
+```
+  app.initiateCall(otherUid)
+    .then(response=>{
+      console.log(response);
+    })
+    .catch(err=>{ console.log(err) });
+```
+This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as ``src`` for html ``video`` tag.
+
+### Listening to incoming Video call
+
+```
+  app.listenToIncomingCall()
+    .subscribe(res=>{console.log(res)})
+``` 
+This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated this call) as response object properties. This response properties are required while accepting this call.  
+
+### Accepting Video call
+
+```
+  app.acceptCall(channelId, initiatedBy)
+    .then(response=>console.log(res))
+```
+This method will accept incoming call. As a response you'll get localVideoSrc as response object prop.
+
+### Displaying remote video streams
+After completing signaling you can add ``app.remoteStreamSrc`` as ``src`` for remote ``video`` html tag.
+
+### Disconnecting video call
+```
+  app.disconnectCall(channelId)  
+```
+This method will stop both remote & local streams. Channel which was used for signaling will be deleted.
