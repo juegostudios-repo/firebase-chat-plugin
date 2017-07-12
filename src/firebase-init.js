@@ -19,6 +19,9 @@ const listenToIncomingCall = require('./video-chat/listen-incomingcall');
 const acceptCall = require('./video-chat/accept-call');
 const disconnectCall = require('./video-chat/disconnect-call');
 
+//group chat
+const grpFeature = require('./group-create').grpFeature;
+
 function FirebaseChat(config, videoChatPCConfig) {
     this.pcConfig = videoChatPCConfig;
     this.app = firebase.initializeApp(config);
@@ -49,5 +52,11 @@ function FirebaseChat(config, videoChatPCConfig) {
     this.acceptCall = acceptCall;
     this.listenToIncomingCall = listenToIncomingCall;
     this.disconnectCall = disconnectCall;
+
+    //grp chat
+    this.groupCreate        = grpFeature.groupCreate;
+    this.groupAddMember     = grpFeature.groupAddMember;
+    this.groupSendMessage   = grpFeature.groupSendMessage;
+    this.groupDelete        = grpFeature.groupDelete;
 }
 module.exports = FirebaseChat;
