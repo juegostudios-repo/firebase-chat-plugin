@@ -1,4 +1,4 @@
-function getChannelIdForUser(userId, channelList)
+function getChannelIdForUser(userId, channelList, channelType)
 {
   
   var channelId;
@@ -10,12 +10,16 @@ function getChannelIdForUser(userId, channelList)
   }
   
   channelList.forEach(channel => {
-    if(channel.member === userId)
+    if(channel.member === userId && channel.channelType === channelType)
+    {
+      channelId = channel.channelId;
+    }
+    else if(channel.groupId === userId && channel.channelType === channelType)
     {
       channelId = channel.channelId;
     }
   });
- 
+  
   return channelId;
 }
 

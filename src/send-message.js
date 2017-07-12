@@ -9,7 +9,8 @@ function sendMessage(otherUserId, message, messageType, fileKey)
     messageType = 'text';
   }
   return new Promise((resolve, reject)=>{
-    var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
+    var channelType = 'one2one';
+    var channelId = getChannelIdForUser(otherUserId, this.user.channelList, channelType);
     var lastActivity = firebase.database.ServerValue.TIMESTAMP;
     if(channelId)
     {

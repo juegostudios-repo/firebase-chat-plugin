@@ -4,7 +4,8 @@ var getChannelIdForUser = require('./get-channelid');
 function getIsTypingStatus(otherUserId) 
 {
   return new Observable((observer) => {
-    var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
+    var channelType = 'one2one';
+    var channelId = getChannelIdForUser(otherUserId, this.user.channelList, channelType);
     if(channelId) 
     {
       this.db.ref('/channel/'+channelId).on('value',(snapshot)=> {

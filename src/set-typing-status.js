@@ -7,11 +7,15 @@ function setIsTypingStatus(otherUserId, htmlTagId)
   tag.addEventListener("focusin", () => {
    
     updateTypingIndicator(this, true, otherUserId)
+    .then(res => console.log(res))
+    .catch(err => console.log(err));
   });
 
   tag.addEventListener("focusout", () => {
    
     updateTypingIndicator(this, false, otherUserId)
+    .then(res => console.log(res))
+    .catch(err => console.log(err));
   });
  
 }
@@ -19,36 +23,37 @@ function setIsTypingStatus(otherUserId, htmlTagId)
 function updateTypingIndicator(self, typingStatus, otherUserId)
 {
     return new Promise((resolve, reject) => {
-    var channelId = getChannelIdForUser(otherUserId, self.user.channelList);
-    var members;
-    var isTyping;
-    if(channelId) 
-    {
-      self.db.ref('/channel/'+channelId).once('value').then((snapshot)=> {
-          snapshot.forEach((childSnapshot) => {
-            if(childSnapshot.getKey() === "members") 
-            {
-              members = childSnapshot.val();
+      var channelType = 'one2one';
+      var channelId = getChannelIdForUser(otherUserId, self.user.channelList, channelType);
+      var members;
+      var isTyping;
+      if(channelId) 
+      {
+        self.db.ref('/channel/'+channelId).once('value').then((snapshot)=> {
+            snapshot.forEach((childSnapshot) => {
+              if(childSnapshot.getKey() === "members") 
+              {
+                members = childSnapshot.val();
+              }
+            });
+            if(members[0].uid === self.user.uid && members[1].uid === otherUserId) {
+              isTyping = typingStatus;
             }
-          });
-          if(members[0].uid === self.user.uid && members[1].uid === otherUserId) {
-            isTyping = typingStatus;
-          }
-          if(members[0].uid === otherUserId && members[1].uid === self.user.uid) {
-            isTyping = typingStatus;
-          }
-          members.forEach((member, i) => {
-            if(member.uid === self.user.uid) {
-              self.db.ref('/channel/' + channelId + '/members/'+ i +'/typingIndicator').set(isTyping);
+            if(members[0].uid === otherUserId && members[1].uid === self.user.uid) {
+              isTyping = typingStatus;
             }
-          });
-      });
-      resolve({ success: true, successMessage: "Typing status assigned succesfully"});
-    }
-    else 
-    {
-      reject({ success: false, errorMessage: "There is no channel established"});
-    }
+            members.forEach((member, i) => {
+              if(member.uid === self.user.uid) {
+                self.db.ref('/channel/' + channelId + '/members/'+ i +'/typingIndicator').set(isTyping);
+              }
+            });
+        });
+        resolve({ success: true, successMessage: "Typing status assigned succesfully"});
+      }
+      else 
+      {
+        reject({ success: false, errorMessage: "There is no channel established"});
+      }
   });
 }
 module.exports = setIsTypingStatus;

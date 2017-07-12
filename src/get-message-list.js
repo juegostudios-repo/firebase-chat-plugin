@@ -5,23 +5,23 @@ var createNewChannel = require('./create-channel');
 
 var lastMsgId;
 
-function getMessageList(otherUserId)
+function getMessageList(otherUserId, channelType)
 {
- 
   return new Observable((observer) => {
     var beginFrom = true;
-    var channelId = getChannelIdForUser(otherUserId, this.user.channelList);
+    var channelId = getChannelIdForUser(otherUserId, this.user.channelList, channelType);
     if(!channelId){ 
       createNewChannel(this,this.user.uid, otherUserId)
       .then(res=> {
-        this.getMessageList(otherUserId)
+        this.getMessageList(otherUserId, channelType)
         .subscribe(res => {
           observer.next(res);
-        },err => observer.error({ success: false, errorMessage:" Could not subscribe to a channel " }) );
+        },err => observer.error({ success: false, errorMessage:" Could not create a new Channel " }) );
       })
       .catch(err => observer.error(err));
     }
     else {
+     
       var order = 'timestamp';
       this.db.ref('/channel/' + channelId + '/messages/').orderByChild(order)
       .on('value',snapshot => {
@@ -60,5 +60,7 @@ function getMessageList(otherUserId)
     }
   });
 }
+
+
 
 module.exports = getMessageList;
