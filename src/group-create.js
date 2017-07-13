@@ -4,6 +4,12 @@ var getChannelIdForUser = require('./get-channelid');
 //creating new group
 function groupCreate(userIds, grpId, grpName, grpProfilePic)
 {
+  console.log(" grp create");
+  var index = userIds.indexOf(this.user.uid);
+  if(index !== -1){
+    userIds.splice(index, 1);
+  }
+  
   return new Promise((resolve, reject) => {
     var user = {
       uid: this.user.uid,
@@ -11,11 +17,9 @@ function groupCreate(userIds, grpId, grpName, grpProfilePic)
     var member_one = {
       user: user
     };
-    var members = [member_one.user];
+    
     var key = this.db.ref().push().key;
     var channelId = key;
-    
-
     //adding group info
     var groupInfo = {
       groupId: grpId,
@@ -23,31 +27,34 @@ function groupCreate(userIds, grpId, grpName, grpProfilePic)
       groupPic: ' '
     }
 
-    if(userIds)
+    if(userIds.length)
     {
+      var members = [member_one.user];
       userIds.forEach((userId, i) => {
         getUserDetails(this, userId)
         .then((member) => {
-          if(!member)
+          if(member)
           {
-            reject({status: false, message: userId + " User Does not exist"}); 
+            var otherMember = member.user;
+            members.push(otherMember);
+            if((userIds.length - 1) === i)
+            {
+              createGroupWithIds(this, userIds, members, channelId, grpId, groupInfo)
+              .then(res => {
+                resolve(res);
+              })
+              .catch(err => reject(err));
+            }
           }
           else
           {
-            var otherMember = member.user;
-            members = members.concat(otherMember);
-            addToChannelList(this, userId, channelId, grpId);
-            if((userIds.length-1) === i)
-            {
-              var channelName = "group";
-              var createdAt = Date.now() + this.serverTimeOffset;
-              addToChannelList(this, this.user.uid, channelId, grpId);
-              createChannelCollection(this, members, channelId, createdAt, channelName, groupInfo);
-              resolve({status: true, responseMessage: {message: "Channel created", channelId: channelId}});
-            }
+            reject({success: false, errMsg: "Group creation cancelled. Some users doesn't exists."})
           }
         })
-      });
+        .catch(err => { 
+          reject(err);
+        });    
+      })
     }
     else
     {
@@ -59,64 +66,67 @@ function groupCreate(userIds, grpId, grpName, grpProfilePic)
 //adding new members to the existing group
 function groupAddMember(userIds, grpId)
 {
+  console.log("grp add member");
+  var index = userIds.indexOf(this.user.uid);
+  if(index !== -1){
+    userIds.splice(index, 1);
+  }
   return new Promise((resolve, reject) => {
-    console.log("Group Add Member");
-    this.db.ref('users/' + this.user.uid + '/channelList/').orderByChild('groupId').equalTo(grpId)
-    .once('value').then(snapshot => {
-      if(snapshot.val())
-      {
-        var channelId;
-        var members = [];
-        snapshot.forEach((childSnapshot) =>{
-         channelId = childSnapshot.val().channelId;
-        });
-        if(channelId)
+    if(userIds.length)
+    {
+      this.db.ref('users/' + this.user.uid + '/channelList/').orderByChild('groupId').equalTo(grpId)
+      .once('value').then(snapshot => {
+        if(snapshot.val())
         {
-          console.log("channelId:: ",channelId);
-          if(userIds)
+          var channelId;
+          var members = [];
+          snapshot.forEach((childSnapshot) =>{
+            channelId = childSnapshot.val().channelId;
+          });
+          if(channelId)
           {
             userIds.forEach((userId, i) => {
-              getUserDetails(this, userId)
-              .then((member) => {
-                if(!member)
-                {
-                  reject({status: false, message: userId + " User Does not exist"}); 
-                }
-                else
-                {
-                  var otherMember = member.user;
-                  members = members.concat(otherMember);
-                  addToChannelList(this, userId, channelId, grpId);
-                  if((userIds.length-1) === i)
+              getUserDetailsWithNoGrpID(this, userId, grpId)
+                .then((member) => {
+                  if(member)
                   {
-                    var channelRef = this.db.ref('channel/' + channelId + '/members/');
-                    channelRef.once('value')
-                    .then(snapshot => {
-                      var result = snapshot.val();
-                      result = result.concat(members);
-                      addToExistingChannel(channelRef, result);
-                      resolve({status: true, responseMessage: {message: "Members added", channelId: channelId}});
-                    })
+                    var otherMember = member.user;
+                    members.push(otherMember);
+                    if((userIds.length - 1) === i)
+                    {
+                      saveDataToCollection(this, userIds, members, channelId, grpId)
+                      .then(res => resolve(res))
+                      .catch(err => reject(err));
+                    }
+                    
                   }
-                }
+                  else
+                  {
+                    reject({success: false, errMsg: "Group creation cancelled. Some users doesn't exists."})
+                  }
+                })
+                .catch(err => { 
+                  reject({success: false, errMsg: "Group creation cancelled. " + err.errMsg });
+                });    
               })
-            });
+          
           }
           else
           {
-            reject({succes: false, errMsg: "Atleast one member is must"});
+            reject({succes: false, errMsg: "Channel does not exists."});
           }
         }
         else
         {
-          reject({succes: false, errMsg: "Channel does not exists."});
+          reject({succes: false, errMsg: grpId + " Group doesn't exists in your channel"});
         }
-      }
-      else
-      {
-        reject({succes: false, errMsg: grpId + " Group doesn't exists in your channel"});
-      }
-    })
+      })
+    }
+    else
+    {
+      reject({succes: false, errMsg: "Atleast one member is must"});
+    }
+    
   })
 }
 
@@ -211,6 +221,69 @@ function groupDelete(groupId)
   });
 }
 
+function getUserDetailsWithNoGrpID(self, userId, grpId)
+{
+  return new Promise((resolve, reject)=>{
+    var usersRef = self.db.ref('/users/' + userId);
+    usersRef.once('value')
+    .then((snapshot) => {         
+      if(snapshot.val())
+      {
+        var userChannelRef = self.db.ref('/users/' + userId + '/channelList/').orderByChild('groupId').equalTo(grpId)
+        .once('value').then(res => {
+          if(res.val())
+          {
+            reject({success: false, errMsg: "Group " + grpId + " already present in some userIds."});
+          }
+          else
+          {
+            var user = {
+              uid: snapshot.val().uid,
+            }
+            resolve({ user: user });
+          }
+         
+          
+        });
+        
+      } 
+      else
+      {
+        reject({success: false, errMsg: "User " + userId + " doesn't exists."})
+      } 
+    }, 
+    err=> {reject({success: false, errMsg: "User " + userId + " doesn't exists."})});
+  });
+}
+
+function saveDataToCollection(self, userIds, members, channelId, grpId)
+{
+  return new Promise((resolve, reject) => {
+    if(userIds.length === members.length)
+    {
+      userIds.forEach((userId, i) => {
+        addToChannelList(self, userId, channelId, grpId);
+        if((userIds.length-1) === i)
+        {
+          var channelRef = self.db.ref('channel/' + channelId + '/members/');
+          channelRef.once('value')
+          .then(snapshot => {
+            var result = snapshot.val();
+            result = result.concat(members);
+            addToExistingChannel(channelRef, result);
+            resolve({status: true, responseMessage: {message: "Members added", channelId: channelId}});
+          })
+        }
+      })
+    }
+    else
+    {
+      reject({success: false, errMsg: "Group creation cancelled. Group " + grpId + " already present in some userIds."})
+    }
+  })
+}
+
+
 function getUserDetails(self, userId)
 {
   return new Promise((resolve, reject)=>{
@@ -226,7 +299,32 @@ function getUserDetails(self, userId)
         resolve(null);
       } 
     }, 
-    err=> reject(err));
+    err=> {reject({success: false, errMsg: "User " + userId + " doesn't exists."})});
+  });
+}
+
+function createGroupWithIds(self, userIds, members, channelId, grpId, groupInfo)
+{
+  return new Promise((resolve, reject) => {
+    if(userIds.length === (members.length - 1))
+    {
+      userIds.forEach((userId, i) => {
+        addToChannelList(self, userId, channelId, grpId);
+        if((userIds.length-1) === i)
+        {
+          var channelName = "group";
+          var createdAt = Date.now() + self.serverTimeOffset;
+          addToChannelList(self, self.user.uid, channelId, grpId);
+          createChannelCollection(self, members, channelId, createdAt, channelName, groupInfo);
+          resolve({status: true, responseMessage: {message: "Channel created", channelId: channelId}});
+        }
+      });
+      
+    }
+    else
+    {
+      reject({success: false, errMsg: "Group creation cancelled. Some users doesn't exists."})
+    }
   });
 }
 
