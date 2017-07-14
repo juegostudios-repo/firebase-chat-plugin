@@ -7,14 +7,12 @@ function setIsTypingStatus(otherUserId, htmlTagId)
   tag.addEventListener("focusin", () => {
    
     updateTypingIndicator(this, true, otherUserId)
-    .then(res => console.log(res))
     .catch(err => console.log(err));
   });
 
   tag.addEventListener("focusout", () => {
    
     updateTypingIndicator(this, false, otherUserId)
-    .then(res => console.log(res))
     .catch(err => console.log(err));
   });
  

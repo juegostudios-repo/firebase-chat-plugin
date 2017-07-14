@@ -28,7 +28,7 @@ function getMessageList(otherUserId, channelType)
         if(beginFrom)
         {
           //list of msgs
-          result = [];
+          var result = [];
           snapshot.forEach((childSnapshot) =>{
             result.push(childSnapshot.val())
           });
@@ -41,7 +41,7 @@ function getMessageList(otherUserId, channelType)
         else
         {
           //receiving the new msgs
-          result = [];
+          var result = [];
           var order = 'msgId';
           this.db.ref('/channel/' + channelId + '/messages').orderByChild(order).startAt(lastMsgId)/*.limitToLast(1)*/
           .once('value', snapshot => {

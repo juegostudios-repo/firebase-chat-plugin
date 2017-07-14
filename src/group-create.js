@@ -4,7 +4,6 @@ var getChannelIdForUser = require('./get-channelid');
 //creating new group
 function groupCreate(userIds, grpId, grpName, grpProfilePic)
 {
-  console.log(" grp create");
   var index = userIds.indexOf(this.user.uid);
   if(index !== -1){
     userIds.splice(index, 1);
@@ -66,7 +65,6 @@ function groupCreate(userIds, grpId, grpName, grpProfilePic)
 //adding new members to the existing group
 function groupAddMember(userIds, grpId)
 {
-  console.log("grp add member");
   var index = userIds.indexOf(this.user.uid);
   if(index !== -1){
     userIds.splice(index, 1);
@@ -133,7 +131,6 @@ function groupAddMember(userIds, grpId)
 //sending a message to the group
 function groupSendMessage(groupId, message, messageType, fileKey)
 {
-  console.log("Group send message");
   if(!messageType){
     messageType = 'text';
   }
@@ -143,7 +140,6 @@ function groupSendMessage(groupId, message, messageType, fileKey)
     var lastActivity = firebase.database.ServerValue.TIMESTAMP;
     if(channelId)
     {
-      console.log(channelId);
       var time = Date.now() + this.serverTimeOffset;
       var messageObj;
       messageObj = {
@@ -186,7 +182,6 @@ function groupSendMessage(groupId, message, messageType, fileKey)
 //delete a group
 function groupDelete(groupId)
 {
-  console.log("delete group");
   return new Promise((resolve, reject) => {
     var userRef = this.db.ref('users/' + this.user.uid + '/channelList/');
     userRef.orderByChild('groupId').equalTo(groupId).once('value')

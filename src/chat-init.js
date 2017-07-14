@@ -27,17 +27,12 @@ function initChat (userId, displayName, displayPhoto)
       } 
       else 
       {
-        lastSeenAt = firebase.database.ServerValue.TIMESTAMP;
+        var lastSeenAt = firebase.database.ServerValue.TIMESTAMP;
         var user={
           uid: userId,
           displayName: displayName ? displayName: "User " + userId,
-          displayPhoto: ' ',
           lastSeenAt: lastSeenAt
         };
-        if(!displayPhoto)
-        {
-          user.displayPhoto= " ";
-        }
         userRef.set(user)
         .then((pushResponse) => {
           this.user = user;
