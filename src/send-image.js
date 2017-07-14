@@ -1,14 +1,21 @@
 const firebase = require('firebase');
 const jimp = require('../vendor/jimp');
 
-function sendFile(filePath, otherUserId, messageType, compress)
+function sendFile(filePath, otherUserId, channelType, messageType, compress)
 {
   return new Promise((resolve, reject)=>
   {
     var fileKey = firebase.database().ref().push().key;
     compressFile(this, filePath, otherUserId, messageType, fileKey, compress)
     .then((data)=>{
-      return this.sendMessage(otherUserId, data, messageType, fileKey);
+      if( channelType === "one2one" )
+      {
+        return this.sendMessage(otherUserId, data, messageType, fileKey);
+      } else if(channelType === "group"){
+        return this.groupSendMessage(otherUserId, data, messageType, fileKey);
+      } else{
+        throw new Error("Please specify channelType while sending file.");
+      }
     })
     .then((res)=> {
       resolve(res)
@@ -22,7 +29,6 @@ function compressFile(self, file, otherUserId, messageType, fileKey, compress)
   return new Promise((resolve, reject)=>{
     if(compress === false)
     {
-     
       uploadFile(self, fileKey, file).then(res=>resolve(file)).catch(err=>{reject(err);})
     } else{
       Jimp.read(file)
