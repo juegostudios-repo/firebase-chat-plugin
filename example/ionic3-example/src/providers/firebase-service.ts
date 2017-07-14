@@ -49,6 +49,8 @@ export class FirebaseServiceProvider {
       ]
       }
     */ 
+    if(!firebaseConfig)
+      alert("Please add your firebase Config to variable firebaseConfig in/n 'src/providers/firebase-service.ts' file");
     this.fire = new FirebaseChat(firebaseConfig, videoChatServerConfig); 
   }
 
