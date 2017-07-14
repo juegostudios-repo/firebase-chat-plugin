@@ -117,7 +117,7 @@ app.getFile(fileKey)
 })
 ```
 
-### Receiving Message
+### Listing & Receiving Messages
 
 ```
 app.getMessageList(otherUserId)
