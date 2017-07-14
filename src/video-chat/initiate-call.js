@@ -52,21 +52,23 @@ function pushChannelIdToReceiver(self)
   self.db.ref('/users/' + otherUserId)
   .once('value')
   .then(result => {
-    var key;
-    result.forEach(childKey => {
-      key = childKey.getKey()
-    })
+    var res = result.val();
     var channelObj = {
       channelId: channelId,
       initiatedBy: self.user.uid
     }
-    var pushKey = self.db.ref('/users/' + otherUserId + '/' + key + '/incomingCall/').push(channelObj).key;
-    try{
-      setTimeout(()=>{
-        self.db.ref('/users/' + otherUserId + '/' + key + '/incomingCall/'+pushKey).remove();
-      }, 30000)
-    } catch(e){ console.log("Tried deleting call details...."); }
-  });
+    if(res){
+      var pushKey = self.db.ref('/users/' + otherUserId + '/incomingCall/').push(channelObj).key;
+      try{
+        setTimeout(()=>{
+          self.db.ref('/users/' + otherUserId + '/incomingCall/'+pushKey).remove();
+        }, 30000)
+      } catch(e){ console.log("Tried deleting call details...."); }
+    } else {
+      throw new Error( "User does't exist" );
+    }
+  })
+  .catch(err=>console.log(err));
 
   startListeningToAnswer(self);
 }
