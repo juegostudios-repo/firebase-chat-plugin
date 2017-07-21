@@ -22,6 +22,8 @@ const disconnectCall = require('./video-chat/disconnect-call');
 //group chat
 const grpFeature = require('./group-create').grpFeature;
 
+const getUserDetails = require('./get-user-details');
+
 function FirebaseChat(config, videoChatPCConfig) {
     this.pcConfig = videoChatPCConfig;
     this.app = firebase.initializeApp(config);
@@ -34,7 +36,7 @@ function FirebaseChat(config, videoChatPCConfig) {
 
     this.getChannelList = getChannelList;
 
-    this.setOnlineStatus = onlineStatus.setOnlineStatus;
+    this.setOnlineStatus = onlineStatus.setOnlineStatus; //deprecated
     this.getOnlineStatus = onlineStatus.getOnlineStatus;
 
     this.sendImage = sendImage;
@@ -56,7 +58,8 @@ function FirebaseChat(config, videoChatPCConfig) {
     //grp chat
     this.groupCreate        = grpFeature.groupCreate;
     this.groupAddMember     = grpFeature.groupAddMember;
-    this.groupSendMessage   = grpFeature.groupSendMessage;
     this.groupDelete        = grpFeature.groupDelete;
+
+    this.getUserDetails = getUserDetails;
 }
 module.exports = FirebaseChat;
