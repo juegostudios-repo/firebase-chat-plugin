@@ -82,18 +82,30 @@ app.initChat(userID, displayName, displayPic)
 ```
 This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
 
-### Updating user profile picture
+### Updating profile picture
+This method is used to update both user and group display picture. 
+    - To update group display picture pass the groupID and channelType = 'group'
+    - To update user display picture pass the channelType = 'one2one'
 ```
-app.updateProfilePic(filePath)
+app.updateProfilePic(filePath, channelType, [groupID])
 .then(fileKey => {
   console.log(filKey)
 })
 .catch(err => console.log(err));
 ```
 
+### Get User Details
+```
+  app.getUserDetails(otherUserId)
+  .then(response => {
+    console.log(response);
+  })
+  .catch(err => console.log(err));
+```
+
 ### Sending message
 ```
-app.sendMessage(otherUserId, message, messageType /* optional */, fileKey /* optional */)
+app.sendMessage(otherUserId, message, channelType, [messageType], [fileKey])
 .then(res => {
   console.log(res);
 })
@@ -102,7 +114,7 @@ app.sendMessage(otherUserId, message, messageType /* optional */, fileKey /* opt
 
 ### Sending Image
 ```
-app.sendImage(imageUrl, otherUserId, type)
+app.sendImage(imageUrl, otherUserId, channelType , messageType)
 .then(res => 
     console.log(res),
   err => console.log(err));
@@ -120,7 +132,7 @@ app.getFile(fileKey)
 ### Listing & Receiving Messages
 
 ```
-app.getMessageList(otherUserId)
+app.getMessageList(otherUserId, channelType)
 .subscribe(message => {
     console.log(message);
   }, 
@@ -205,3 +217,34 @@ After completing signaling you can add ``app.remoteStreamSrc`` as ``src`` for re
   app.disconnectCall(channelId)  
 ```
 This method will stop both remote & local streams. Channel which was used for signaling will be deleted.
+
+### Creating Group
+```
+  app.groupCreate(groupId, groupName, [grpProfilePicture])
+  .then(details => {
+    console.log(details);
+  })
+  .catch(err => console.log(err));
+```
+This method will create the group with the current userID.
+
+### Adding Group Member
+```
+  app.groupAddMember(userId, grpId)
+  .then(response => {
+    console.log(response);
+  })
+  .catch(err => console.log(err));
+```
+This method will add one member at a time.
+
+### Exit Group
+```
+  app.groupDelete(grpId)
+  then(response => {
+    console.log(response);
+  })
+  .catch(err => console.log(err));
+```
+This method will delete the group from your channel list.
+
