@@ -32,7 +32,6 @@ In ionic example, video chat requires following permissions in AndroidManifest f
 import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
 ```
 
-
 ### Initialize your app
 ```
 const firebaseConfig = {
@@ -69,10 +68,11 @@ videoChatServerConfig is an optional parameter. URLs for STUN and TURN server ca
 For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/).
 
 ```
-var app = new FirebaseChat(firebaseConfig, [videoChatServerConfig]); 
+var app = new FirebaseChat(firebaseConfig, [videoChatServerConfig]/*optional*/); 
 ```
 
 ### Initialize chat
+This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
 ```
 app.initChat(userID, displayName, displayPic)
 .then(user=>{
@@ -80,12 +80,11 @@ app.initChat(userID, displayName, displayPic)
 })
 .catch(err=> console.log(err));
 ```
-This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
 
 ### Updating profile picture
 This method is used to update both user and group display picture. To update group display picture pass the groupID and channelType = 'group'. To update user display picture pass the channelType = 'one2one'.
 ```
-app.updateProfilePic(filePath, channelType, [groupID])
+app.updateProfilePic(filePath, channelType, [groupID]/*optional*/)
 .then(fileKey => {
   console.log(filKey)
 })
@@ -103,7 +102,7 @@ app.updateProfilePic(filePath, channelType, [groupID])
 
 ### Sending message
 ```
-app.sendMessage(otherUserId, message, channelType, [messageType], [fileKey])
+app.sendMessage(otherUserId, message, channelType, [messageType]/*optional*/, [fileKey]/*optional*/)
 .then(res => {
   console.log(res);
 })
@@ -180,53 +179,18 @@ app.getIsTypingStatus(OtherUserId)
 });
 ```
 
-### Start Video Chat
-
-```
-  app.initiateCall(otherUid)
-    .then(response=>{
-      console.log(response);
-    })
-    .catch(err=>{ console.log(err) });
-```
-This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as ``src`` for html ``video`` tag.
-
-### Listening to incoming Video call
-
-```
-  app.listenToIncomingCall()
-    .subscribe(res=>{console.log(res)})
-``` 
-This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated this call) as response object properties. This response properties are required while accepting this call.  
-
-### Accepting Video call
-
-```
-  app.acceptCall(channelId, initiatedBy)
-    .then(response=>console.log(res))
-```
-This method will accept incoming call. As a response you'll get localVideoSrc as response object prop.
-
-### Displaying remote video streams
-After completing signaling you can add ``app.remoteStreamSrc`` as ``src`` for remote ``video`` html tag.
-
-### Disconnecting video call
-```
-  app.disconnectCall(channelId)  
-```
-This method will stop both remote & local streams. Channel which was used for signaling will be deleted.
-
 ### Creating Group
+This method will create the group with the current userID.
 ```
-  app.groupCreate(groupId, groupName, [grpProfilePicture])
+  app.groupCreate(groupId, groupName, [grpProfilePicture]/*optional*/)
   .then(details => {
     console.log(details);
   })
   .catch(err => console.log(err));
 ```
-This method will create the group with the current userID.
 
 ### Adding Group Member
+This method will add one member at a time.
 ```
   app.groupAddMember(userId, grpId)
   .then(response => {
@@ -234,9 +198,9 @@ This method will create the group with the current userID.
   })
   .catch(err => console.log(err));
 ```
-This method will add one member at a time.
 
 ### Exit Group
+This method will delete the group from your channel list.
 ```
   app.groupDelete(grpId)
   then(response => {
@@ -244,5 +208,38 @@ This method will add one member at a time.
   })
   .catch(err => console.log(err));
 ```
-This method will delete the group from your channel list.
+
+
+### Start Video Chat
+This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as ``src`` for html ``video`` tag.
+```
+  app.initiateCall(otherUid)
+    .then(response=>{
+      console.log(response);
+    })
+    .catch(err=>{ console.log(err) });
+```
+
+### Listening to incoming Video call
+This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated this call) as response object properties. This response properties are required while accepting this call.  
+```
+  app.listenToIncomingCall()
+    .subscribe(res=>{console.log(res)})
+``` 
+
+### Accepting Video call
+This method will accept incoming call. As a response you'll get localVideoSrc as response object prop.
+```
+  app.acceptCall(channelId, initiatedBy)
+    .then(response=>console.log(res))
+```
+
+### Displaying remote video streams
+After completing signaling you can add ``app.remoteStreamSrc`` as ``src`` for remote ``video`` html tag.
+
+### Disconnecting video call
+This method will stop both remote & local streams. Channel which was used for signaling will be deleted.
+```
+  app.disconnectCall(channelId)  
+```
 
