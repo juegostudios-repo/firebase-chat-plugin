@@ -69,7 +69,7 @@ videoChatServerConfig is an optional parameter. URLs for STUN and TURN server ca
 For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/).
 
 ```
-var app = new FirebaseChat(firebaseConfig, videoChatServerConfig); /* video chat server config is optional parameter*/
+var app = new FirebaseChat(firebaseConfig, [videoChatServerConfig]); 
 ```
 
 ### Initialize chat
@@ -83,9 +83,7 @@ app.initChat(userID, displayName, displayPic)
 This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
 
 ### Updating profile picture
-This method is used to update both user and group display picture. 
-    - To update group display picture pass the groupID and channelType = 'group'
-    - To update user display picture pass the channelType = 'one2one'
+This method is used to update both user and group display picture. To update group display picture pass the groupID and channelType = 'group'. To update user display picture pass the channelType = 'one2one'.
 ```
 app.updateProfilePic(filePath, channelType, [groupID])
 .then(fileKey => {
