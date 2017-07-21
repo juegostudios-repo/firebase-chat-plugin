@@ -66,13 +66,11 @@ const videoChatServerConfig = {
 ```
 videoChatServerConfig is an optional parameter. URLs for STUN and TURN server can be set using this argument.
 
-
-### Note: 
-#### STUN/TURN servers are required to get working video chat. Without specifying `videoChatServerConfig` video chat will work only on devices connected to same LAN. For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/). To host TURN Server refer to this [link](http://turnserver.open-sys.org/downloads/v4.5.0.6/turnserver-4.5.0.6-amazon-aws-ec2-x86_64.txt). It will explain how to host TURN server on amazon AWS.
-
 ```
 var app = new FirebaseChat(firebaseConfig, [videoChatServerConfig]/*optional*/); 
 ```
+### Note: 
+STUN/TURN servers are required to get working video chat. Without specifying `videoChatServerConfig` video chat will work only on devices connected to same LAN. For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/). To host TURN Server refer to this [link](http://turnserver.open-sys.org/downloads/v4.5.0.6/turnserver-4.5.0.6-amazon-aws-ec2-x86_64.txt). It will explain how to host TURN server on Amazon AWS.
 
 ### Initialize chat
 This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
