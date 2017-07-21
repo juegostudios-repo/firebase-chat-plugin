@@ -16,7 +16,7 @@ import { ChatDetailsPage }        from '../pages/chat-details/chat-details';
 import { AddNewChatPage }         from '../pages/add-new-chat/add-new-chat';
 import { CreateGroupPage }        from '../pages/create-group/create-group';
 import { SelectParticipantPage }  from '../pages/select-participant/select-participant';
-import { GroupMenuPage }          from '../pages/group-menu/group-menu';
+
 
 import { FirebaseServiceProvider } from '../providers/firebase-service';
 
@@ -29,7 +29,7 @@ import { FirebaseServiceProvider } from '../providers/firebase-service';
     AddNewChatPage,
     CreateGroupPage,
     SelectParticipantPage,
-    GroupMenuPage
+   
   ],
   imports: [
     BrowserModule,
@@ -45,7 +45,7 @@ import { FirebaseServiceProvider } from '../providers/firebase-service';
     AddNewChatPage,
     CreateGroupPage,
     SelectParticipantPage,
-    GroupMenuPage
+    
   ],
   providers: [
     StatusBar,

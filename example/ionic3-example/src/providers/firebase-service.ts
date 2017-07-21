@@ -77,10 +77,9 @@ export class FirebaseServiceProvider {
   {
     return this.fire.getMessageList(userID, channelType);
   }
-  sendMessage(uid, message?)
+  sendMessage(uid, message, channelType)
   {
-    return this.fire.sendMessage(uid, message);
-    
+    return this.fire.sendMessage(uid, message, channelType);
   }
 
   getOnlineStatus(otherUserId)
@@ -90,18 +89,16 @@ export class FirebaseServiceProvider {
 
   //to set the isTyping status 
   setTypingStatus(otherUserId, htmlTagId) {
-    console.log("setTypingStatus");
     this.fire.setIsTypingStatus(otherUserId, htmlTagId);
   }
 
   getTypingStatus(otherUserId) {
-    console.log("setTypingStatus");
     return this.fire.getIsTypingStatus(otherUserId); 
   }
 
-  fileUpload(path, otherUserId, type)
+  fileUpload(path, otherUserId, channelType, msgType)
   {
-    return this.fire.sendImage(path, otherUserId, type);
+    return this.fire.sendImage(path, otherUserId, channelType, msgType);
   }
 
   getFile( fileKey )
@@ -114,9 +111,12 @@ export class FirebaseServiceProvider {
     return this.fire.listenToUpdatedChannels();
   }
 
-  updateProfilePic(filePath)
+  updateProfilePic(filePath, channelType, grpId?)
   {
-    return this.fire.updateProfilePic(filePath);
+    if(!grpId)
+      return this.fire.updateProfilePic(filePath, channelType);
+    else
+      return this.fire.updateProfilePic(filePath, channelType, grpId);
   }
 
   startVideoCall(ouid)
@@ -134,23 +134,23 @@ export class FirebaseServiceProvider {
     this.fire.disconnectCall(channelId);
   }
 
-  createGroup(userIds ,groupId, groupName, grpProfilePic?)
+  createGroup(groupId, groupName, grpProfilePic?)
   {
-    return this.fire.groupCreate(userIds, groupId, groupName);
+    return this.fire.groupCreate(groupId, groupName, grpProfilePic);
   }
 
-  addGrpMembers(userIds, grpId)
+  addGrpMember(userId, grpId)
   {
-    return this.fire.groupAddMember(userIds, grpId);
-  }
-
-  sendGrpMsg(grpId, message)
-  {
-    return this.fire.groupSendMessage(grpId, message);
+    return this.fire.groupAddMember(userId, grpId);
   }
 
   deleteGroup(grpId)
   {
     return this.fire.groupDelete(grpId);
+  }
+
+  getUserDetails(otherUserId)
+  {
+    return this.fire.getUserDetails(otherUserId);
   }
 }
