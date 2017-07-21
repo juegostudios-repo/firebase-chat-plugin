@@ -100,15 +100,25 @@ function groupDelete(groupId)
         var channelRef = this.db.ref('channel/' + channelId + '/members/');
         channelRef.once('value')
         .then(snapshot => {
-          var result = [];
-          var members = snapshot.val();
-          members.forEach(member => {
-            if(member.uid !== this.user.uid)
-            {
-              result = result.concat({uid: member.uid});
-            }
-          })
-          addToExistingChannel(channelRef, result);
+          var m = [];
+          m = snapshot.val();
+          if(m.length === 1 )
+          {
+            var deleteChannelRef = this.db.ref('channel/' + channelId);
+            deleteChannelRef.remove();
+          }
+          else
+          {
+            var result = [];
+            var members = snapshot.val();
+            members.forEach(member => {
+              if(member.uid !== this.user.uid)
+              {
+                result = result.concat({uid: member.uid});
+              }
+            })
+            addToExistingChannel(channelRef, result);
+          }
         })
         resolve({success: true, responseMsg: "Group " + groupId + " deleted from your channelList."});
       }
@@ -117,6 +127,7 @@ function groupDelete(groupId)
         reject({success: false, errMsg: "Group " + groupId + " doesn't exists."});
       }
     })
+    .catch(err => reject({success: false, errMsg: "Group " + groupId + " doesn't exists."}));
   });
 }
 
