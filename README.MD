@@ -11,6 +11,7 @@ This package uses [WebRTC](https://webrtc.org/) APIs for video chat. WebRTC uses
 4. Copy the required credentials to add in your npm package.
 
 ### This is the first beta release, please use with caution.
+### If you were using older version of this package, before updating you need to clear firebase database.
 
 ### Installation with ionic framework 3 (currently supported)
 ```
