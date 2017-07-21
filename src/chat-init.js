@@ -15,7 +15,7 @@ function initChat (userId, displayName, displayPhoto)
         this.user = snapshot.val();
         if(displayPhoto)
         {
-          this.updateProfilePic(displayPhoto);
+          this.updateProfilePic(displayPhoto, 'one2one');
         }
         if(displayName)
         {
@@ -38,7 +38,7 @@ function initChat (userId, displayName, displayPhoto)
           this.user = user;
           if(displayPhoto)
           {
-            this.updateProfilePic(displayPhoto);
+            this.updateProfilePic(displayPhoto, 'one2one');
           }
           listenToChannelListUpdate(this);
           resolve(user);
