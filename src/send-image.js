@@ -8,12 +8,12 @@ function sendFile(filePath, otherUserId, channelType, messageType, compress)
     var fileKey = firebase.database().ref().push().key;
     compressFile(this, filePath, otherUserId, messageType, fileKey, compress)
     .then((data)=>{
-      if( channelType === "one2one" )
+      if(channelType)
       {
-        return this.sendMessage(otherUserId, data, messageType, fileKey);
-      } else if(channelType === "group"){
-        return this.groupSendMessage(otherUserId, data, messageType, fileKey);
-      } else{
+        return this.sendMessage(otherUserId, data, channelType, messageType, fileKey);
+      } 
+      else
+      {
         throw new Error("Please specify channelType while sending file.");
       }
     })
