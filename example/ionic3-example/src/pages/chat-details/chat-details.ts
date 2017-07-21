@@ -1,29 +1,21 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { ViewChild } from '@angular/core';
-import { Navbar } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController, ModalController, AlertController } from 'ionic-angular';
+
 import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 
-import { GroupMenuPage } from '../group-menu/group-menu';
-import { RecentChatListPage } from '../recent-chat-list/recent-chat-list';
+import { SelectParticipantPage }  from '../select-participant/select-participant';
 
 import { FirebaseServiceProvider } from '../../providers/firebase-service';
-/**
- * Generated class for the ChatDetailsPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+
 @IonicPage()
 @Component({
   selector: 'page-chat-details',
   templateUrl: 'chat-details.html',
 })
 export class ChatDetailsPage {
-   @ViewChild(Navbar) navbar: Navbar;
 
   userId = localStorage.getItem("user_id");
   channel_id;
@@ -37,14 +29,23 @@ export class ChatDetailsPage {
   otherProfilePic;
   otherUserName;
   channelType;
+  groupMembers;
+
+  showLoadingSpinner = true;
 
   videoCallOverlay = false;
   myVideoSource;
   remoteVideoSource:SafeUrl;
   videoChannelId;
 
+  spinnerHide = [];
+  downloadHide = [];
+
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
+    public actionSheetCtrl: ActionSheetController,
+    public modalCntrl: ModalController,
+    public alertCtrl: AlertController,
     private _fire: FirebaseServiceProvider,
     private camera: Camera,
     private file: File,
@@ -61,11 +62,6 @@ export class ChatDetailsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatDetailsPage');
-     this.navbar.backButtonClick = (e: UIEvent) => {
-    // Print this event to the console
-      this.navCtrl.push(RecentChatListPage);
-    
-    }
   }
 
   ionViewDidEnter()
@@ -75,6 +71,10 @@ export class ChatDetailsPage {
     this.otherUserId = otherUser.uid;
     this.otherUserName = otherUser.displayName;
     this.otherUserPic = otherUser.displayPhoto;
+    if(this.channelType === "group")
+    {
+      this.groupMembers = otherUser.grpMembers;
+    }
     if(this.otherUserPic !== ' ')
     {
       this.otherProfilePic = this.otherUserPic;
@@ -91,7 +91,6 @@ export class ChatDetailsPage {
       .subscribe((res : any) => {
         if(res)
         {
-          console.log(res);
           this.typingStatus = res.typingIndicator;
         }
           
@@ -104,9 +103,14 @@ export class ChatDetailsPage {
     .subscribe(res => {
       if(res)
       {
+        this.showLoadingSpinner = false;
         this.displayMessages(res);
       }
-    }, err => console.log(err));
+    }, err => {
+      this.showLoadingSpinner = false;
+      this.showAlert("ERROR", "Something went wrong. Try again");
+      console.log(err);
+    });
     
     this._fire.listenToVideoCall().subscribe(res=>{
       var confir = confirm( res.initiatedBy + " Calling...");
@@ -119,32 +123,45 @@ export class ChatDetailsPage {
   displayMessages(messages)
   { 
     this.messageList = this.messageList.concat(messages);
+    this.messageList.forEach((msg, i) => {
+      var date = new Date(msg.timestamp);
+      var time = date.toLocaleString();
+      this.spinnerHide[i] = true;
+      this.downloadHide[i] = false;
+      this.messageList[i]["time"] = time;
+      //adding username for the member
+      if(this.channelType === 'group')
+      {
+        this.groupMembers.forEach(member => {
+          if(member.uid === msg.uid)
+          {
+            this.messageList[i]["userName"] = member.userName;
+          }
+        })
+      } 
+    })
   }
 
   sendMessage()
   {
-    var message = this.message;
-    var uid = this.otherUserId;
-    if(this.channelType === "one2one")
+    if(this.message)
     {
-      console.log("One2One chat");
-      this._fire.sendMessage(uid, message)
+      var message = this.message;
+      var uid = this.otherUserId;
+      this._fire.sendMessage(uid, message, this.channelType)
       .then(res => {
+        this.message = ' ';
         console.log(res);
       })
       .catch(err => { 
         console.log(err);
       });
+      
     }
     else
     {
-      console.log("Group chat");
-      this._fire.sendGrpMsg(uid, message)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => console.log(err));
-    }
+      this.showAlert("ERROR", "Type something to send");
+    }  
   }
 
   setOnlineStatus(status)
@@ -176,7 +193,7 @@ export class ChatDetailsPage {
         return this.file.resolveLocalFilesystemUrl(imagePath);
     })
     .then((res: any)=>{
-      return this._fire.fileUpload(res.nativeURL, this.otherUserId, 'image');
+      return this._fire.fileUpload(res.nativeURL, this.otherUserId, this.channelType, 'image');
     })
     .then(res=> console.log("image uplaod response = ",res))
     .catch(err=>{
@@ -185,38 +202,17 @@ export class ChatDetailsPage {
   }
   getFullImage( fileKey, i )
   {
+    this.downloadHide[i] = true;
+    this.spinnerHide[i] = false;
     this._fire.getFile(fileKey)
     .then(data => {
       this.messageList[i].message = data;
+      this.spinnerHide[i] = true;
     })
     .catch(err => console.log(err));
   }
 
-  updateProfilePic()
-  {
-    var options = {
-      quality: 100,
-      targetWidth: 512,
-      targetHeight: 512,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-      saveToPhotoAlbum: false,
-      correctOrientation: true
-    };
-    
-    this.camera.getPicture(options)
-    .then(imagePath => {
-        return this.file.resolveLocalFilesystemUrl(imagePath);
-    })
-    .then((res: any)=>{
-      return this._fire.updateProfilePic(res.nativeURL);
-    })
-    .then(res=> console.log("image upload response = ",res))
-    .catch(err=>{
-      console.log("image error response =",err)
-    });
-  }
+  
   acceptCall(channel)
   {
     this.videoChannelId = channel.channelId;
@@ -230,7 +226,6 @@ export class ChatDetailsPage {
   
   startVideoCall()
   {
-    console.log("kjsdfk");
     ///alert(this.otherUserId)
     this._fire.startVideoCall(this.otherUserId)
     .then(response=>{
@@ -261,14 +256,103 @@ export class ChatDetailsPage {
     }
   }
 
-  menuItems()
-  {
-    console.log("clicked menu");
-    this.navCtrl.push(GroupMenuPage, {groupId: this.otherUserId});
-  }
-
   ionViewWillEnter()
   {
     this.messageList = [];
+  }
+
+  back()
+  {
+    this.navCtrl.popToRoot();
+  }
+
+   addMember()
+  {    
+    var grpID = this.otherUserId;
+    var selectModal =  this.modalCntrl.create(SelectParticipantPage, { groupID: grpID });
+    selectModal.present();
+  }
+  
+  deleteGroup()
+  {
+    var grpId = this.otherUserId;
+     this._fire.deleteGroup(grpId)
+    .then(res => {
+      this.navCtrl.popToRoot();
+    })
+    .catch(err => this.showAlert("ERROR", err.errMsg));
+  }
+
+  updateProfilePic()
+  {
+    var options = {
+      quality: 100,
+      targetWidth: 512,
+      targetHeight: 512,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      saveToPhotoAlbum: false,
+      correctOrientation: true
+    };
+    
+    this.camera.getPicture(options)
+    .then(imagePath => {
+        return this.file.resolveLocalFilesystemUrl(imagePath);
+    })
+    .then((res: any)=>{
+        var grpId = this.otherUserId;
+        this._fire.updateProfilePic(res.nativeURL, 'group', grpId)
+        .then(res => console.log(res))
+        .catch(err => this.showAlert("ERROR", "Group picture updation failed!!"));
+        
+    })
+    .catch(err => this.showAlert("ERROR", err));
+  }
+
+  showSettings()
+  {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Settings',
+      buttons: [
+        {
+          text: 'Add member',
+          handler: () => {
+            this.addMember();
+          }
+        },
+        {
+          text: 'Delete group',
+          handler: () => {
+            this.deleteGroup();
+          }
+        },
+        {
+          text: 'Change group Pic',
+          handler: () => {
+            this.updateProfilePic();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log("cancel clicked");
+          }
+        }
+      ]
+
+    });
+    actionSheet.present();
+  }
+
+  showAlert(title, message)
+  {
+    let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
   }
 }

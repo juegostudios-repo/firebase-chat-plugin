@@ -110,4 +110,73 @@ page-chat-details {
       left: 45%;
     }
   }
+  .time-of-msg
+  {
+    font-size: 10px;
+    color: grey;
+  }
+  .image-msg
+  {
+
+  }
+  .image-download
+  {
+    position: absolute;
+    bottom: 30px;
+    right: 20px;
+  }
+  .image-download-left
+  {
+    position: absolute;
+    bottom: 30px;
+    left: 140px;
+  }
+  .download-icon
+  {
+    font-size: 32px;
+  }
+  .header-container
+  {
+    background-color: #f8f8f8;
+    padding-bottom: 15px;
+  }
+  .icon-back
+  {
+    font-size: 24px;
+    float: left;
+    padding-left: 5px;
+    padding-top: 10px;
+    padding-right: 5px;
+  }
+  .other-profile-picture
+  {
+    border: 1px solid black;
+    float: left;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+  }
+  .img-div
+  {
+    padding-top: 5px;
+  }
+  .user-info
+  {
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 10px;
+    margin-left: 45%;
+  }
+  .settings-icon
+  {
+    float: right;
+    font-size: 30px;
+    color: grey;
+    padding-top: 10px;
+    padding-right: 8px;
+  }
+   .loading-spinner
+  {
+    margin-left: 50%;
+  }
 }

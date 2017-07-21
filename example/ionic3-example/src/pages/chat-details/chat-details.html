@@ -1,25 +1,24 @@
-<!--
-  Generated template for the ChatDetailsPage page.
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-  <ion-navbar>
-      <div>   
-        <img class="other-profile-picture" src="{{ otherProfilePic }}"  alt="..." /> 
-        <div class="user-info" *ngIf="channelType === 'one2one'">
-          {{ otherUserName }} 
-          <div class="status online" *ngIf="onlineStatus === true"></div>
-          <div class="status offline" *ngIf="onlineStatus === false"></div>
-          <ion-icon class="video-call"name="videocam" color="black" (click)="startVideoCall()"></ion-icon>
-        </div>
-        <div class="user-info" (click)="menuItems()" *ngIf="channelType === 'group'">
-          {{ otherUserName }}
-        </div>
+  <div class="header-container">
+    <ion-icon class="icon-back" (click)="back()" name="md-arrow-round-back"></ion-icon>
+    <ion-icon class="settings-icon" *ngIf="channelType === 'group'" (click)="showSettings()" name="md-settings"></ion-icon>
+    <div>   
+      <div class="img-div">
+        <img class="other-profile-picture" *ngIf="(otherUserPic !== ' ') && (otherUserPic)" src="{{ otherProfilePic }}"  alt="..." />
+        <img class="other-profile-picture" *ngIf="(otherUserPic === ' ') || (!otherUserPic)" src="assets/images/defaultProfile.png"  alt="..." />
       </div>
-          
-  </ion-navbar>
+      <div class="user-info" *ngIf="channelType === 'one2one'">
+        {{ otherUserName }} 
+          <div class="status online" *ngIf="onlineStatus === true"></div>
+          <div class="status offline" *ngIf="onlineStatus === false" ></div>
+          <ion-icon class="video-call" name="videocam" color="black" (click)="startVideoCall()"></ion-icon>
+      </div>
+      <div class="user-info" *ngIf="channelType === 'group'">
+        {{ otherUserName }}
+      </div>
+    </div>
+  </div>
 </ion-header>
 
 
@@ -27,19 +26,38 @@
   <div class="main-conatiner">
     <div class="list-of-msgs"> 
       <ion-list>
+        <ion-spinner *ngIf="showLoadingSpinner" class="loading-spinner"></ion-spinner>
         <ion-item *ngFor='let message of messageList; let i=index'>
           <ion-label style="text-align:right;" *ngIf="userId === message.uid"> 
             <div *ngIf="message.messageType === 'text'">  
               {{ message.message }}
             </div>
-            <img (click)="getFullImage( message.fileKey, i )" src="{{ message.message }}" height="150" width="150" *ngIf="message.messageType === 'image'"/> 
+            <div class="image-msg" *ngIf="message.messageType === 'image'">
+              <img src="{{ message.message }}" height="150" width="150" /> 
+              <div class="image-download">
+                 <ion-icon [hidden]="downloadHide[i]" class="download-icon" (click)="getFullImage( message.fileKey, i )" name="md-download"></ion-icon>
+                 <ion-spinner [hidden]="spinnerHide[i]" name="bubbles"></ion-spinner>
+              </div>
+            </div>
+            <div class="time-of-msg">
+               {{ message.time }}
+            </div>
           </ion-label>
          
           <ion-label style="text-align:left;" *ngIf="userId !== message.uid"> 
             <div *ngIf="message.messageType === 'text'">  
               {{ message.message }}
             </div>
-            <img (click)="getFullImage( message.fileKey, i )" src="{{ message.message }}" height="150" width="150" *ngIf="message.messageType === 'image'"/> 
+            <div class="image-msg" *ngIf="message.messageType === 'image'">
+              <img src="{{ message.message }}" height="150" width="150" /> 
+              <div class="image-download-left">
+                <ion-icon [hidden]="downloadHide[i]" class="download-icon" (click)="getFullImage( message.fileKey, i )" name="md-download"></ion-icon>
+                <ion-spinner [hidden]="spinnerHide[i]" name="bubbles"></ion-spinner>
+              </div>
+            </div>
+            <div class="time-of-msg">
+              {{ message.time }} &nbsp; - &nbsp; {{ message.userName }}
+            </div>
           </ion-label>
         </ion-item>
       </ion-list>
@@ -50,7 +68,7 @@
 
     <div class="send-message">
       <div class="send-text-box">
-        <ion-input [(ngModel)]="message"  placeholder="Enter message" id="inputId">
+        <ion-input [(ngModel)]="message"  placeholder="Type here.." id="inputId">
         </ion-input>
       </div>
       <div class="attach-icon-container">

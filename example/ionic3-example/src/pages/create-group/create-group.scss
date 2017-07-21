@@ -2,7 +2,7 @@ page-create-group {
   .main-container
   {
     width: 90%;
-    margin: 150px auto;
+    margin: 80px auto;
   }
   .group-id
   {
@@ -32,5 +32,15 @@ page-create-group {
   .create-btn
   {
     margin: 10px 0;
+  }
+  .profile-pic
+  {
+    margin-left: 32%;
+  }
+  .img-profile-pic
+  {
+    border-radius: 50%;
+    width: 130px;
+    height: 130px;
   }
 }

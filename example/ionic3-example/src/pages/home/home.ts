@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
@@ -17,9 +17,10 @@ export class HomePage {
   receiverId;
   message;
   userName;
-  profilePic;
+  
 
   constructor( public navCtrl: NavController, 
+    public alrtCtrl: AlertController,
     private _fire: FirebaseServiceProvider,
     private camera: Camera,
     private file: File ) 
@@ -29,39 +30,30 @@ export class HomePage {
 
   initChat()
   {
-    this._fire.init(this.myUid, this.userName, this.profilePic)
-    .then(res=> {
-      console.log(res);
-      localStorage.setItem('user_id', this.myUid );
-      this.navCtrl.push(RecentChatListPage);
-    })
-    .catch(err => {
-      console.log(err);
-    })
+    if(this.myUid)
+    {
+      this._fire.init(this.myUid, this.userName)
+      .then(res=> {
+        localStorage.setItem('user_id', this.myUid );
+        this.navCtrl.setRoot(RecentChatListPage);
+      })
+      .catch(err => {
+        this.showAlert();
+      });
+    }
+    else
+    {
+      this.showAlert();
+    }
   }
 
-  upload()
+  showAlert()
   {
-    console.log("Clicked");
-    var options = {
-      quality: 100,
-      targetWidth: 512,
-      targetHeight: 512,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-      saveToPhotoAlbum: false,
-      correctOrientation: true
-    };
-    
-    this.camera.getPicture(options)
-    .then(imagePath => {
-        return this.file.resolveLocalFilesystemUrl(imagePath);
-    })
-    .then((res: any)=>{
-        this.profilePic = res.nativeURL;
-        console.log("URL -> ",res.nativeURL);
-    })
-    .catch(err => console.log(err));
+    let alert = this.alrtCtrl.create({
+      title: 'ERROR',
+      subTitle: 'UserId is mandatory',
+      buttons: ['OK']
+    });
+    alert.present();
   }
 }

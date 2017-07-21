@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { FirebaseServiceProvider } from '../../providers/firebase-service';
 
@@ -15,6 +15,7 @@ export class AddNewChatPage {
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
+    public alrtCtrl: AlertController,
     private _fire: FirebaseServiceProvider ) {
   }
 
@@ -24,6 +25,34 @@ export class AddNewChatPage {
 
   createChat()
   { 
-    this.navCtrl.push(ChatDetailsPage, { otherUser: { uid: this.otherUserId, displayPhoto: ' ', displayName: "  ", channelType: "one2one"} });
+    this._fire.getUserDetails(this.otherUserId)
+    .then(userDetails => {
+      if(userDetails.displayPhoto)
+      {
+        this._fire.getFile(userDetails.displayPhoto)
+        .then(data => {
+          userDetails.displayPhoto = data;
+          this.navCtrl.push(ChatDetailsPage, { otherUser: userDetails });
+        })
+        .catch(err => console.log(err));
+      }
+      else
+      {
+        this.navCtrl.push(ChatDetailsPage, { otherUser: userDetails });
+      }
+    
+    })
+    .catch(err => this.showAlert(err.errMsg));
+    
+  }
+
+  showAlert(errMsg)
+  {
+    let alert = this.alrtCtrl.create({
+      title: 'ERROR',
+      subTitle: errMsg,
+      buttons: ['OK']
+    });
+    alert.present();
   }
 }

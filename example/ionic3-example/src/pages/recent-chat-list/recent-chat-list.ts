@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { FirebaseServiceProvider } from '../../providers/firebase-service';
 
@@ -7,12 +7,6 @@ import { ChatDetailsPage }  from '../chat-details/chat-details';
 import { AddNewChatPage }   from '../add-new-chat/add-new-chat';
 import { CreateGroupPage }  from '../create-group/create-group';
 
-/**
- * Generated class for the RecentChatListPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
 @IonicPage()
 @Component({
   selector: 'page-recent-chat-list',
@@ -24,8 +18,11 @@ export class RecentChatListPage {
   otherUserId;
   message;
 
+  showSpinner = true;
+
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
+    public alrtCtrl: AlertController,
     private _fire: FirebaseServiceProvider) {
   }
 
@@ -36,16 +33,19 @@ export class RecentChatListPage {
 
   ionViewDidEnter() 
   {
-    console.log('ionViewDidEnter RecentChatListPage');
      this._fire.getRecentChatList()
     .then((channels: any) => {
       if(channels)
-      { console.log("channel list:: ");
-        console.log(channels);
+      { 
+        this.showSpinner = false;
         this.displayChannelList(channels)
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      this.showSpinner = false;
+      console.log(err);
+      this.showAlert("ERROR", "No recent chats");
+    });
 
     this._fire.listenToUpdatedChannels()
     .subscribe(updatedChannels =>{
@@ -86,6 +86,10 @@ export class RecentChatListPage {
       displayPhoto: channel.userDetails.displayPhoto,
       channelType: channel.channelType
     };
+    if(channel.channelType === 'group')
+    {
+      obj["grpMembers"] = channel.userDetails.grpMembers;
+    }
     this.navCtrl.push(ChatDetailsPage, { otherUser: obj });
   }
 
@@ -96,10 +100,16 @@ export class RecentChatListPage {
 
   createNewGroup()
   {
-    console.log("clicked");
     this.navCtrl.push(CreateGroupPage);
   }
-
-  
+  showAlert(title, msg)
+  {
+    let alert = this.alrtCtrl.create({
+      title: title,
+      subTitle: msg,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 
 }

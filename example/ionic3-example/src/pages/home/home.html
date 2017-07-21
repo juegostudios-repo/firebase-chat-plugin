@@ -9,18 +9,13 @@
 <ion-content padding>
   <div style="position: relative; height: 100%;">
     <div class="login">
-      <div class="profile-pic" (click)="upload()">
-        <div>
-          <img class="img-profile-pic" *ngIf="profilePic" src="{{ profilePic }}" />
-          <ion-icon *ngIf="!profilePic" name="add-circle" style="font-size: 150px;color:grey; padding-left:7px;"> </ion-icon>
-        </div>
-      </div>
+      
       <div class="login-textBox">
-        <ion-input  [(ngModel)]="myUid" class="text-box" placeholder="Enter User ID">
+        <ion-input  [(ngModel)]="myUid" class="text-box" placeholder="User ID">
         </ion-input>
       </div>
       <div class="login-textBox">
-        <ion-input  [(ngModel)]="userName" class="text-box" placeholder="Enter User Name">
+        <ion-input  [(ngModel)]="userName" class="text-box" placeholder="User Name">
         </ion-input> 
       </div>
       <div >

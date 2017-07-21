@@ -1,13 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
-import { CreateGroupPage } from '../create-group/create-group';
-/**
- * Generated class for the SelectParticipantPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+import { FirebaseServiceProvider } from '../../providers/firebase-service';
+
 @IonicPage()
 @Component({
   selector: 'page-select-participant',
@@ -15,32 +10,57 @@ import { CreateGroupPage } from '../create-group/create-group';
 })
 export class SelectParticipantPage {
 
-  participantList = [];
   userId; 
+  groupId;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
-    public viewCntrl: ViewController ) {
+    public alrtCtrl: AlertController,
+    private _fire: FirebaseServiceProvider ) {
+      this.groupId = this.navParams.get('groupID');
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SelectParticipantPage');
   }
 
-  next()
+  addMember()
   {
-    console.log("clicked next()");
     if(this.userId)
     {
-      this.participantList = this.participantList.concat(this.userId);
-      this.userId = null;
+      this._fire.addGrpMember(this.userId, this.groupId)
+      .then(res => {
+        this.showAlert("SUCCESS", "One member added to the group");
+      })
+      .catch(err => {
+        this.showAlert("ERROR", err.errMsg);
+      });
     }
+    else
+    {
+      this.showAlert( "ERROR", "UserID is mandatory");
+    }
+    
   }
 
   done()
   {
-    this.participantList = this.participantList.concat(this.userId);
-    this.viewCntrl.dismiss(this.participantList);
+    this.navCtrl.pop();
+  }
+
+  back()
+  {
+    this.navCtrl.pop();
+  }
+
+  showAlert(title, errMsg)
+  {
+    let alert = this.alrtCtrl.create({
+      title: title,
+      subTitle: errMsg,
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
 }

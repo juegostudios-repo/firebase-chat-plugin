@@ -1,4 +1,21 @@
-page-recent-chat-list {  
+page-recent-chat-list {
+  .title-container
+  {
+    padding: 15px;
+    background-color: #F8F8F8;
+  }
+  .title
+  {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+  }
+ 
+  #new-group
+  {
+    float:right;
+  }
+
   .single-msg
   {
     padding: 2px; 
@@ -9,5 +26,63 @@ page-recent-chat-list {
     float:left;
     border-radius:50%;
     border:1px solid black;
+  }
+  .new-group
+  {
+    float:right;
+  }
+
+  div.new-group:hover:before {
+    content: 'Create Group';
+    position: absolute;
+    color: #989898;
+    font-size: 12px;
+    right: 5px;
+    top: 4px;
+    -webkit-animation-name: seconds; 
+    -webkit-animation-duration: 6s;
+    animation-name: seconds;
+    animation-duration: 6s;
+  }
+
+  .new-chat
+  {
+    float:right;
+  }
+
+  div.new-chat:hover:before {
+    content: 'New One-One chat';
+    position: absolute;
+    color: #989898;
+    font-size: 12px;
+    right: 22px;
+    top: 5px;
+    -webkit-animation-name: seconds; 
+    -webkit-animation-duration: 6s;
+    animation-name: seconds;
+    animation-duration: 6s;
+  }
+
+  @keyframes seconds {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      left: -9999px;
+    }
+  }
+  @-webkit-keyframes seconds {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      left: -9999px;
+    }
+  }
+  .spinner
+  {
+    margin-left: 50%;
   }
 }

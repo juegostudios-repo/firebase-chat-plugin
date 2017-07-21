@@ -16,10 +16,10 @@
 <ion-content padding>
   <div class="login">
     <div class="login-textBox">
-      <ion-input  [(ngModel)]="otherUserId" class="text-box" placeholder="Enter Receiver User Id">
+      <ion-input  [(ngModel)]="otherUserId" class="text-box" placeholder="Other User ID">
       </ion-input>
     </div>
    <br />
-    <button ion-button (click)="createChat()" small block>CREATE</button>
+    <button [disabled]="!otherUserId" ion-button (click)="createChat()" block>CREATE</button>
   </div>
 </ion-content>
