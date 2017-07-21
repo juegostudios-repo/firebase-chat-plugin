@@ -118,7 +118,8 @@ function fetchGroupInfo(self, channelId)
   var userDetails = {
     uid: '',
     displayName: '',
-    displayPhoto: ''
+    displayPhoto: '',
+    grpMembers: ' '
   };
   return new Promise((resolve, reject) => {
     self.db.ref('channel/' + channelId).once('value')
@@ -129,14 +130,27 @@ function fetchGroupInfo(self, channelId)
         userDetails.uid = snapshot.val().groupId;
         userDetails.displayName = snapshot.val().groupName;
         userDetails.displayPhoto = snapshot.val().groupPic;
-        if(userDetails.uid !== '')
-        {
-          resolve(userDetails);
-        }
-        else
-        {
-          reject({success: false, errMsg: "Result not Found"});
-        }
+        var users = snapshot.val().members;
+        var members = [];
+        users.forEach((member, i) => {
+          self.db.ref('users/' + member.uid).once('value')
+          .then(res => {
+            members.push({uid: res.val().uid, userName: res.val().displayName})
+          });
+          if((users.length - 1) === i)
+          {
+            userDetails.grpMembers = members;
+            if(userDetails.uid !== '')
+            {
+              resolve(userDetails);
+            }
+            else
+            {
+              reject({success: false, errMsg: "Result not Found"});
+            }
+          }
+        })
+        
       }
     },err=>reject({success: false, errMsg: "Result not Found"}))
   })
