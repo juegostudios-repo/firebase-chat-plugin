@@ -13,9 +13,9 @@ ionic start myApp blank
 2. **Create Firebase Account**
 
 To create firebase setup follow the below steps:
-    - Goto https://console.firebase.google.com
-    - Select "Add Project" and provide a name to your project
-    - You can change the security rules of your database. To know more about it, click [here](https://firebase.google.com/docs/database/security/quickstart) 
+- Goto https://console.firebase.google.com
+- Select "Add Project" and provide a name to your project
+- You can change the security rules of your database. To know more about it, click [here](https://firebase.google.com/docs/database/security/quickstart) 
 
 ### Step One: Installation with ionic framework 3 (currently supported) 
 ```
