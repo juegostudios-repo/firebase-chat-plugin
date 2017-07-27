@@ -6,15 +6,16 @@ The purpose of this node package is to quickly implement one to one text & [vide
 #### If you were using 1.0.0 or 1.0.1 version of this package, before updating you need to clear firebase database.
 
 ### Prerequisite
-1. Create Ionic project
+1. **Create Ionic project**
 ```
 ionic start myApp blank
 ```
-2. Create Firebase Account
+2. **Create Firebase Account**
+
 To create firebase setup follow the below steps:
     - Goto https://console.firebase.google.com
     - Select "Add Project" and provide a name to your project
-    - To know and change the database security rules to your database, click [here](https://firebase.google.com/docs/database/security/quickstart) 
+    - You can change the security rules of your database. To know more about it, click [here](https://firebase.google.com/docs/database/security/quickstart) 
 
 ### Step One: Installation with ionic framework 3 (currently supported) 
 ```
@@ -43,6 +44,7 @@ const firebaseConfig = {
   messagingSenderId: "XXXXXXXXXXX"
 };
 ```
+videoChatServerConfig is an `optional` parameter. URLs for STUN and TURN server can be set using this argument.
 ```
 // videoChatServerConfig looks similar to this.
 const videoChatServerConfig = {
@@ -63,13 +65,12 @@ const videoChatServerConfig = {
     ]
   }
 ```
-videoChatServerConfig is an optional parameter. URLs for STUN and TURN server can be set using this argument.
 
 ```
 var app = new FirebaseChat(firebaseConfig, videoChatServerConfig /*optional*/); 
 ```
 
-### Note: 
+#### Note: 
 STUN/TURN servers are required to get working video chat. Without specifying `videoChatServerConfig` video chat will work only on devices connected to same LAN. For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/). To host TURN Server refer to this [link](http://turnserver.open-sys.org/downloads/v4.5.0.6/turnserver-4.5.0.6-amazon-aws-ec2-x86_64.txt). It will explain how to host TURN server on Amazon AWS.
 
 ### Step Four: Invoke following Methods in your Ionic project
