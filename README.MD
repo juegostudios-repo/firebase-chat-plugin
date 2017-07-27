@@ -2,37 +2,37 @@ Node package for firebase based chat application
 ================================================
 The purpose of this node package is to quickly implement one to one text & [video](#video-chat) chat, group text chat using firebase realtime database as a backend infrastructure. You have to subscribe for your own firebase setup. Currently this package supports one to one and group chat with text and file messages, also supports user online status, typing status (for one to one chat) and other important features. 
 
-### Step One: Create Firebase Account
-To create firebase setup follow the below steps
-1. Goto https://console.firebase.google.com
-2. Select "Add Project" and provide a name to your project
-3. Click on "Add Firebase to your web app" Option. This will show the firebase connection details.
-4. Copy the required credentials to add in your npm package.
+#### This is the first beta release, please use with caution.
+#### If you were using 1.0.0 or 1.0.1 version of this package, before updating you need to clear firebase database.
 
-### This is the first beta release, please use with caution.
-### If you were using 1.0.0 or 1.0.1 version of this package, before updating you need to clear firebase database.
+### Prerequisite
+1. Create Ionic project
+```
+ionic start myApp blank
+```
+2. Create Firebase Account
+To create firebase setup follow the below steps:
+    - Goto https://console.firebase.google.com
+    - Select "Add Project" and provide a name to your project
+    - To know and change the database security rules to your database, click [here](https://firebase.google.com/docs/database/security/quickstart) 
 
-### Installation with ionic framework 3 (currently supported)
+### Step One: Installation with ionic framework 3 (currently supported) 
 ```
 npm i --save juegostudio-firebase-chat-plugin
-```  
-Check sample code [here](https://github.com/juegostudio-repo/firebase-chat-plugin/tree/master/example).
-In ionic example, video chat requires following permissions in AndroidManifest file. 
-``` 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 ```
-### Import Statement
+Check sample code [here](https://github.com/juegostudio-repo/firebase-chat-plugin/tree/master/example).
 
+### Step Two: Import the Statement in your Ionic project
 ```
 import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
 ```
 
-### Initialize your app
+### Step Three: Initialize your app
+To initialize the app follow the below steps:
+1. Go to your firebase account.
+2. Click on "Add Firebase to your web app" Option. This will show the firebase connection details.
+3. Copy the required credentials into your Ionic project.
+
 ```
 const firebaseConfig = {
   apiKey: "xxxxxx",
@@ -43,7 +43,6 @@ const firebaseConfig = {
   messagingSenderId: "XXXXXXXXXXX"
 };
 ```
-You have to get  firebaseConfig from firebase developer console by creating new project.
 ```
 // videoChatServerConfig looks similar to this.
 const videoChatServerConfig = {
@@ -69,10 +68,13 @@ videoChatServerConfig is an optional parameter. URLs for STUN and TURN server ca
 ```
 var app = new FirebaseChat(firebaseConfig, videoChatServerConfig /*optional*/); 
 ```
+
 ### Note: 
 STUN/TURN servers are required to get working video chat. Without specifying `videoChatServerConfig` video chat will work only on devices connected to same LAN. For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/). To host TURN Server refer to this [link](http://turnserver.open-sys.org/downloads/v4.5.0.6/turnserver-4.5.0.6-amazon-aws-ec2-x86_64.txt). It will explain how to host TURN server on Amazon AWS.
 
-### Initialize chat
+### Step Four: Invoke following Methods in your Ionic project
+
+- #### Initialize chat
 This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
 ```
 app.initChat(userID, displayName, displayPic /*optional*/)
@@ -82,8 +84,11 @@ app.initChat(userID, displayName, displayPic /*optional*/)
 .catch(err=> console.log(err));
 ```
 
-### Updating profile picture
-This method is used to update both user and group display picture. To update group display picture pass the groupID and channelType = 'group'. To update user display picture pass the channelType = 'one2one'.
+- #### Updating profile picture
+This method is used to update both user and group display picture. 
+
+    - To update group display picture pass the groupID and channelType = 'group'. 
+    - To update user display picture pass the channelType = 'one2one'.
 ```
 app.updateProfilePic(filePath, channelType, groupID/*optional*/)
 .then(fileKey => {
@@ -92,7 +97,7 @@ app.updateProfilePic(filePath, channelType, groupID/*optional*/)
 .catch(err => console.log(err));
 ```
 
-### Get User Details
+- #### Get User Details
 ```
   app.getUserDetails(otherUserId)
   .then(response => {
@@ -101,7 +106,7 @@ app.updateProfilePic(filePath, channelType, groupID/*optional*/)
   .catch(err => console.log(err));
 ```
 
-### Sending message
+- #### Sending message
 ```
 app.sendMessage(otherUserId/groupID, message, channelType, messageType /*optional*/, fileKey /*optional*/)
 .then(res => {
@@ -110,7 +115,7 @@ app.sendMessage(otherUserId/groupID, message, channelType, messageType /*optiona
 .catch(err => console.log(err));
 ```
 
-### Sending Image
+- #### Sending Image
 ```
 app.sendImage(imageUrl, otherUserId/groupID, channelType , messageType)
 .then(res => 
@@ -118,7 +123,7 @@ app.sendImage(imageUrl, otherUserId/groupID, channelType , messageType)
   err => console.log(err));
 ```
 
-### Get file using fileKey
+- #### Get file using fileKey
 ``sendImage()`` method uploads compressed image, returns fileKey. To get actual image use fileKey with ``getFile()`` method.
 ```
 app.getFile(fileKey)
@@ -127,7 +132,7 @@ app.getFile(fileKey)
 })
 ```
 
-### Listing & Receiving Messages
+- #### Listing & Receiving Messages
 
 ```
 app.getMessageList(otherUserId/groupID, channelType)
@@ -137,7 +142,7 @@ app.getMessageList(otherUserId/groupID, channelType)
   err => console.log(err));
 ```
 
-### Listing Recent Channels 
+- #### Listing Recent Channels 
 ```
 app.getChannelList()
 .then(channelList => {
@@ -146,7 +151,7 @@ app.getChannelList()
 .catch(err=> console.log(err));
 ```
 
-### Listening to Updated Channels
+- #### Listening to Updated Channels
 ```
 app.listenToUpdatedChannels()
 .subscribe( updatedChannels => {
@@ -155,7 +160,7 @@ app.listenToUpdatedChannels()
   err => console.log(err));
 ```
 
-### Get Online Status
+- #### Get Online Status
 ```
 app.getOnlineStatus(otherUserId)
 .subscribe(onlineStatus=> {
@@ -163,7 +168,7 @@ app.getOnlineStatus(otherUserId)
 });
 ```
 
-### Typing Indicator 
+- #### Typing Indicator 
 To set Typing status of the user parameters required are: Receiver's UserID and id of the ```input``` html tag.
 ```
 app.setIsTypingStatus(otherUserId, inputTagId)
@@ -180,7 +185,7 @@ app.getIsTypingStatus(OtherUserId)
 });
 ```
 
-### Creating Group
+- #### Creating Group
 This method will create the group with the current userID.
 ```
   app.groupCreate(groupId, groupName, grpProfilePicture /*optional*/)
@@ -190,7 +195,7 @@ This method will create the group with the current userID.
   .catch(err => console.log(err));
 ```
 
-### Adding Group Member
+- #### Adding Group Member
 This method will add one member at a time.
 ```
   app.groupAddMember(userId, grpId)
@@ -200,7 +205,7 @@ This method will add one member at a time.
   .catch(err => console.log(err));
 ```
 
-### Exit Group
+- #### Exit Group
 This method will delete the group from your channel list.
 ```
   app.groupDelete(grpId)
@@ -213,7 +218,17 @@ This method will delete the group from your channel list.
 ### Video Chat
 This package uses [WebRTC](https://webrtc.org/) APIs for video chat. Only one to one video chat is supported. WebRTC uses RTCPeerConnection to communicate streaming data between browsers, but also needs a mechanism to coordinate communication and to send control messages, a process known as signaling. In this package we have implemented Signaling methods using Firebase real time database.
 
-### Start Video Chat
+In ionic example, video chat requires following permissions in AndroidManifest file. 
+``` 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+```
+
+- #### Start Video Chat
 This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as ``src`` for html ``video`` tag.
 ```
   app.initiateCall(otherUid)
@@ -223,24 +238,24 @@ This method will return Promise, if it is successful it will return channelId an
     .catch(err=>{ console.log(err) });
 ```
 
-### Listening to incoming Video call
+- #### Listening to incoming Video call
 This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated this call) as response object properties. This response properties are required while accepting this call.  
 ```
   app.listenToIncomingCall()
     .subscribe(res=>{console.log(res)})
 ``` 
 
-### Accepting Video call
+- #### Accepting Video call
 This method will accept incoming call. As a response you'll get localVideoSrc as response object prop.
 ```
   app.acceptCall(channelId, initiatedBy)
     .then(response=>console.log(res))
 ```
 
-### Displaying remote video streams
+- #### Displaying remote video streams
 After completing signaling you can add ``app.remoteStreamSrc`` as ``src`` for remote ``video`` html tag.
 
-### Disconnecting video call
+- #### Disconnecting video call
 This method will stop both remote & local streams. Channel which was used for signaling will be deleted.
 ```
   app.disconnectCall(channelId)  
