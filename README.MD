@@ -88,7 +88,7 @@ app.getMessageList(otherUserId/groupID, channelType)
 This package uses [WebRTC](https://webrtc.org/) APIs for video chat. Only one to one video chat is supported. WebRTC uses RTCPeerConnection to communicate streaming data between browsers, but also needs a mechanism to coordinate communication and to send control messages, a process known as signaling. In this package we have implemented Signaling methods using Firebase real time database.
 
 ### Step 1: Specify the Video configuration
-videoChatServerConfig is an `optional` parameter while creating the [instance](initialize-your-app) of `FirebaseChat`. URLs for STUN and TURN server can be set using this argument.
+videoChatServerConfig is an `optional` parameter while creating the [instance](#initialize-your-app) of `FirebaseChat`. URLs for STUN and TURN server can be set using this argument.
 ```
 // videoChatServerConfig looks similar to this.
 const videoChatServerConfig = {
