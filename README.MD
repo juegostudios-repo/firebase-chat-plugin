@@ -7,9 +7,9 @@ The purpose of this node package is to quickly implement one to one text & [vide
 
 ### Prerequisite
 1. **Create Ionic project**
-```
-ionic start myApp blank
-```
+    ```
+    ionic start myApp blank
+    ```
 2. **Create Firebase Account**
 
     To create firebase setup follow the below steps:
@@ -32,20 +32,20 @@ import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
 ### Step 3: Initialize your app
 
   - Use those credentials which you copied while creating the firebase account. 
-  ```
-  const firebaseConfig = {
-    apiKey: "xxxxxx",
-    authDomain: "xxxxxxx.firebaseapp.com",
-    databaseURL: "https://xxxxxxx.firebaseio.com",
-    projectId: "xxxxxxx",
-    storageBucket: "xxxxxxx.appspot.com",
-    messagingSenderId: "XXXXXXXXXXX"
-  };
-  ```
+      ```
+      const firebaseConfig = {
+        apiKey: "xxxxxx",
+        authDomain: "xxxxxxx.firebaseapp.com",
+        databaseURL: "https://xxxxxxx.firebaseio.com",
+        projectId: "xxxxxxx",
+        storageBucket: "xxxxxxx.appspot.com",
+        messagingSenderId: "XXXXXXXXXXX"
+      };
+      ```
   - Create a instance
-  ```
-  var app = new FirebaseChat(firebaseConfig, videoChatServerConfig /*optional*/); 
-  ```
+      ```
+      var app = new FirebaseChat(firebaseConfig, videoChatServerConfig /*optional*/); 
+      ```
 
 ### Step 4: Initialize chat
 This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
@@ -164,13 +164,14 @@ Video chat requires some permissions for the android build. So if you are making
 
   - To update group display picture pass the groupID and channelType = 'group'. 
   - To update user display picture pass the channelType = 'one2one'.
-  ```
-  app.updateProfilePic(filePath, channelType, groupID/*optional*/)
-  .then(fileKey => {
-    console.log(filKey)
-  })
-  .catch(err => console.log(err));
-  ```
+
+      ```
+      app.updateProfilePic(filePath, channelType, groupID/*optional*/)
+      .then(fileKey => {
+        console.log(filKey)
+      })
+      .catch(err => console.log(err));
+      ```
 
 - #### Get User Details
   ```
