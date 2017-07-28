@@ -249,7 +249,7 @@ Video chat requires some permissions for the android build. So if you are making
 
 - #### Typing Indicator 
 
-  To set Typing status of the user parameters required are: Receiver's UserID and id of the ```input``` html tag.
+  To set Typing status of the user, parameters required are: Receiver's UserID and id of the ```input``` html tag.
   ```
   app.setIsTypingStatus(otherUserId, inputTagId)
   .then(successMsg => {
@@ -258,7 +258,7 @@ Video chat requires some permissions for the android build. So if you are making
   .catch(err=> console.log(err));
   ```
   
-  To get Typing status the user has to send userId of the Other user 
+  To get Typing status, the user has to send userId of the Other user 
   ```
   app.getIsTypingStatus(OtherUserId)
   .subscribe(TypingStatus => {
