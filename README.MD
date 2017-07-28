@@ -99,7 +99,7 @@ This package uses [WebRTC](https://webrtc.org/) APIs for video chat. Only one to
         storageBucket: "xxxxxxx.appspot.com",
         messagingSenderId: "XXXXXXXXXXX"
       };
-      ```
+     ```
       
 - Specify the Video configuration
 
