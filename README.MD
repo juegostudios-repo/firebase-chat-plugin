@@ -5,7 +5,7 @@ The purpose of this node package is to quickly implement one to one text & [vide
 #### This is the first beta release, please use with caution.
 #### If you were using 1.0.0 or 1.0.1 version of this package, before updating you need to clear firebase database.
 
-### Prerequisite
+### Prerequisite (For both text based and video chat)
 1. **Create Ionic project**
     ```
     ionic start myApp blank
@@ -66,7 +66,7 @@ app.sendMessage(otherUserId/groupID, message, channelType, messageType /*optiona
 .catch(err => console.log(err));
 ```
 
-### Step 5: Listing Recent Chat List
+### Step 6: Listing Recent Chat List
 ```
 app.getChannelList()
 .then(channelList => {
@@ -75,7 +75,7 @@ app.getChannelList()
 .catch(err=> console.log(err));
 ```
 
-### Step 6: Listing & Listening to new Messages
+### Step 7: Listing & Listening to new Messages
 ```
 app.getMessageList(otherUserId/groupID, channelType)
 .subscribe(message => {
@@ -87,7 +87,17 @@ app.getMessageList(otherUserId/groupID, channelType)
 ### Video Chat
 This package uses [WebRTC](https://webrtc.org/) APIs for video chat. Only one to one video chat is supported. WebRTC uses RTCPeerConnection to communicate streaming data between browsers, but also needs a mechanism to coordinate communication and to send control messages, a process known as signaling. In this package we have implemented Signaling methods using Firebase real time database.
 
-### Step 1: Initialize your app
+### Step 1: Install plugin to your Ionic project (currently ionic framework 3 is supported) 
+```
+npm i --save juegostudio-firebase-chat-plugin
+```
+
+### Step 2: Import the Statement in your Ionic project
+```
+import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
+```
+
+### Step 3: Initialize your app
 
 - Specify the Firebase Configuration
      ```
@@ -133,7 +143,7 @@ This package uses [WebRTC](https://webrtc.org/) APIs for video chat. Only one to
 #### Note: 
 STUN/TURN servers are required to get working video chat. Without specifying `videoChatServerConfig` video chat will work only on devices connected to same LAN. For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/). To host TURN Server refer to this [link](http://turnserver.open-sys.org/downloads/v4.5.0.6/turnserver-4.5.0.6-amazon-aws-ec2-x86_64.txt). It will explain how to host TURN server on Amazon AWS.
 
-### Step 2: Initialize chat
+### Step 4: Initialize chat
 This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
 ```
 app.initChat(userID, displayName, displayPic /*optional*/)
@@ -143,7 +153,7 @@ app.initChat(userID, displayName, displayPic /*optional*/)
 .catch(err=> console.log(err));
 ```
 
-### Step 3: Start Video Chat
+### Step 5: Start Video Chat
 This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as ``src`` for html ``video`` tag.
 ```
   app.initiateCall(otherUid)
@@ -153,24 +163,24 @@ This method will return Promise, if it is successful it will return channelId an
     .catch(err=>{ console.log(err) });
 ```
 
-### Step 4: Listening to incoming Video call
+### Step 6: Listening to incoming Video call
 This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated this call) as response object properties. This response properties are required while accepting this call.  
 ```
   app.listenToIncomingCall()
     .subscribe(res=>{console.log(res)})
 ``` 
 
-### Step 5: Accepting Video call
+### Step 7: Accepting Video call
 This method will accept incoming call. As a response you'll get localVideoSrc as response object prop.
 ```
   app.acceptCall(channelId, initiatedBy)
     .then(response=>console.log(res))
 ```
 
-### Step 6: Displaying remote video streams
+### Step 8: Displaying remote video streams
 After completing signaling you can add ``app.remoteStreamSrc`` as ``src`` for remote ``video`` html tag.
 
-### Step 7: Disconnecting video call
+### Step 9: Disconnecting video call
 This method will stop both remote & local streams. Channel which was used for signaling will be deleted.
 ```
   app.disconnectCall(channelId)  
