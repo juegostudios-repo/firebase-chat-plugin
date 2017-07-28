@@ -206,7 +206,7 @@ Video chat requires some permissions for the android build. So if you are making
 
 ### Other Methods
 
-- #### Updating profile picture
+- **Updating profile picture**
 
   This method is used to update both user and group display picture. 
 
@@ -221,7 +221,7 @@ Video chat requires some permissions for the android build. So if you are making
       .catch(err => console.log(err));
       ```
 
-- #### Get User Details
+- **Get User Details**
   ```
     app.getUserDetails(otherUserId)
     .then(response => {
@@ -230,7 +230,7 @@ Video chat requires some permissions for the android build. So if you are making
     .catch(err => console.log(err));
   ```
 
-- #### Listening to Updated Channels
+- **Listening to Updated Channels**
   ```
   app.listenToUpdatedChannels()
   .subscribe( updatedChannels => {
@@ -239,7 +239,7 @@ Video chat requires some permissions for the android build. So if you are making
     err => console.log(err));
   ```
 
-- #### Get Online Status
+- **Get Online Status**
   ```
   app.getOnlineStatus(otherUserId)
   .subscribe(onlineStatus=> {
@@ -247,7 +247,7 @@ Video chat requires some permissions for the android build. So if you are making
   });
   ```
 
-- #### Typing Indicator 
+- **Typing Indicator** 
 
   To set Typing status of the user, parameters required are: Receiver's UserID and id of the ```input``` html tag.
   ```
@@ -266,7 +266,7 @@ Video chat requires some permissions for the android build. So if you are making
   });
   ```
 
-- #### Sending Image
+- **Sending Image**
   ```
   app.sendImage(imageUrl, otherUserId/groupID, channelType , messageType)
   .then(res => 
@@ -274,7 +274,7 @@ Video chat requires some permissions for the android build. So if you are making
     err => console.log(err));
   ```
 
-- #### Get file using fileKey
+- **Get file using fileKey**
 
   ``sendImage()`` method uploads compressed image, returns fileKey. To get actual image use fileKey with ``getFile()`` method.
   ```
@@ -284,7 +284,7 @@ Video chat requires some permissions for the android build. So if you are making
   })
   ```
   
-- #### Creating Group
+- **Creating Group**
 
   This method will create the group with the current userID.
   ```
@@ -295,7 +295,7 @@ Video chat requires some permissions for the android build. So if you are making
     .catch(err => console.log(err));
   ```
   
-- #### Adding Group Member
+- **Adding Group Member**
 
   This method will add one member at a time.
   ```
@@ -306,7 +306,7 @@ Video chat requires some permissions for the android build. So if you are making
     .catch(err => console.log(err));
   ```
 
-- #### Exit Group
+- **Exit Group**
 
   This method will delete the group from your channel list.
   ```
