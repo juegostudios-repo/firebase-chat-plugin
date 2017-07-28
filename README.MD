@@ -44,7 +44,7 @@ import * as FirebaseChat  from 'juegostudio-firebase-chat-plugin';
       ```
   - Create a instance
       ```
-      var app = new FirebaseChat(firebaseConfig, videoChatServerConfig /*optional*/); 
+      var app = new FirebaseChat(firebaseConfig); 
       ```
 
 ### Step 4: Initialize chat
@@ -87,32 +87,63 @@ app.getMessageList(otherUserId/groupID, channelType)
 ### Video Chat
 This package uses [WebRTC](https://webrtc.org/) APIs for video chat. Only one to one video chat is supported. WebRTC uses RTCPeerConnection to communicate streaming data between browsers, but also needs a mechanism to coordinate communication and to send control messages, a process known as signaling. In this package we have implemented Signaling methods using Firebase real time database.
 
-### Step 1: Specify the Video configuration
-videoChatServerConfig is an `optional` parameter while creating the instance of `FirebaseChat`. URLs for STUN and TURN server can be set using this argument.
-```
-// videoChatServerConfig looks similar to this.
-const videoChatServerConfig = {
-    'iceServers': [
-      {
-        'urls': 'stun:stun.l.google.com:19302'
-      },
-      {
-        'urls': 'yourturn server',
-        'username': 'userName',
-        'credential': 'credentials'
-      },
-      {
-        'urls': 'turn server',
-        'username': 'username',
-        'credential' : 'credentials'
+### Step 1: Initialize your app
+
+- Specify the Firebase Configuration
+     ```
+      const firebaseConfig = {
+        apiKey: "xxxxxx",
+        authDomain: "xxxxxxx.firebaseapp.com",
+        databaseURL: "https://xxxxxxx.firebaseio.com",
+        projectId: "xxxxxxx",
+        storageBucket: "xxxxxxx.appspot.com",
+        messagingSenderId: "XXXXXXXXXXX"
+      };
+      ```
+      
+- Specify the Video configuration
+
+    videoChatServerConfig is an `optional` parameter while creating the instance of `FirebaseChat`. URLs for STUN and TURN server can be set using this argument.
+    ```
+    // videoChatServerConfig looks similar to this.
+    const videoChatServerConfig = {
+        'iceServers': [
+          {
+            'urls': 'stun:stun.l.google.com:19302'
+          },
+          {
+            'urls': 'yourturn server',
+            'username': 'userName',
+            'credential': 'credentials'
+          },
+          {
+            'urls': 'turn server',
+            'username': 'username',
+            'credential' : 'credentials'
+          }
+        ]
       }
-    ]
-  }
-```
+    ```
+    
+ - Create a instance
+    ```
+    var app = new FirebaseChat(firebaseConfig, videoChatServerConfig /*optional parameter*/); 
+    ```
+
 #### Note: 
 STUN/TURN servers are required to get working video chat. Without specifying `videoChatServerConfig` video chat will work only on devices connected to same LAN. For more information about STUN and TURN servers you can refer this [link](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/). To host TURN Server refer to this [link](http://turnserver.open-sys.org/downloads/v4.5.0.6/turnserver-4.5.0.6-amazon-aws-ec2-x86_64.txt). It will explain how to host TURN server on Amazon AWS.
 
-### Step 2: Start Video Chat
+### Step 2: Initialize chat
+This method will create new user if user doesn't exist, else it will return existing user details. After initialization you'll be able use chat methods mentioned below.
+```
+app.initChat(userID, displayName, displayPic /*optional*/)
+.then(user=>{
+  console.log(user);// return user object
+})
+.catch(err=> console.log(err));
+```
+
+### Step 3: Start Video Chat
 This method will return Promise, if it is successful it will return channelId and localVideoSrc as response object properties. response.localVideoSrc can be used as ``src`` for html ``video`` tag.
 ```
   app.initiateCall(otherUid)
@@ -122,24 +153,24 @@ This method will return Promise, if it is successful it will return channelId an
     .catch(err=>{ console.log(err) });
 ```
 
-### Step 3: Listening to incoming Video call
+### Step 4: Listening to incoming Video call
 This method will be listening to incoming video calls. If there is a incoming call, you'll get videocall channel ID and initiatedBy(userId of person who has initiated this call) as response object properties. This response properties are required while accepting this call.  
 ```
   app.listenToIncomingCall()
     .subscribe(res=>{console.log(res)})
 ``` 
 
-### Step 4: Accepting Video call
+### Step 5: Accepting Video call
 This method will accept incoming call. As a response you'll get localVideoSrc as response object prop.
 ```
   app.acceptCall(channelId, initiatedBy)
     .then(response=>console.log(res))
 ```
 
-### Step 5: Displaying remote video streams
+### Step 6: Displaying remote video streams
 After completing signaling you can add ``app.remoteStreamSrc`` as ``src`` for remote ``video`` html tag.
 
-### Step 6: Disconnecting video call
+### Step 7: Disconnecting video call
 This method will stop both remote & local streams. Channel which was used for signaling will be deleted.
 ```
   app.disconnectCall(channelId)  
@@ -155,6 +186,13 @@ Video chat requires some permissions for the android build. So if you are making
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 ```
+
+### Sample projects
+- **Ionic project**
+    
+    Check sample code [here](https://github.com/juegostudio-repo/firebase-chat-plugin/tree/master/example).
+- **HTML project** is under development.
+
 
 ### Other Methods
 
